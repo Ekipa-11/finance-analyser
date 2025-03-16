@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funkcionalnosti strežnika</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+        .functionality {
+            margin-bottom: 30px;
+        }
+        .functionality h2 {
+            color: #555;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .functionality p {
+            margin: 10px 0;
+        }
+        .functionality ul {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Funkcionalnosti strežnika</h1>
+
+    <div class="functionality">
+        <h2>1. Avtentikacija in avtorizacija uporabnikov</h2>
+        <p><strong>Opis:</strong> Strežnik upravlja prijavo in registracijo uporabnikov ter zagotavlja varnostni dostop do aplikacije.</p>
+        <p><strong>Vhodi:</strong></p>
+        <ul>
+            <li>Uporabniško ime in geslo (pri prijavi).</li>
+            <li>E-pošta, geslo in druge podatke (pri registraciji).</li>
+        </ul>
+        <p><strong>Izhodi:</strong></p>
+        <ul>
+            <li>JWT (JSON Web Token) za avtentikacijo.</li>
+            <li>Potrditev uspešne prijave ali registracije.</li>
+        </ul>
+        <p><strong>Postopek:</strong></p>
+        <ul>
+            <li>Uporabnik pošlje zahtevo za prijavo ali registracijo.</li>
+            <li>Strežnik preveri podatke in ustvari JWT za avtentikacijo.</li>
+            <li>Strežnik shrani podatke o uporabniku v bazo podatkov.</li>
+        </ul>
+    </div>
+
+    <div class="functionality">
+        <h2>2. Shranjevanje in upravljanje podatkov</h2>
+        <p><strong>Opis:</strong> Strežnik shranjuje podatke o uporabnikih, transakcijah, proračunih in drugih finančnih podatkih.</p>
+        <p><strong>Vhodi:</strong></p>
+        <ul>
+            <li>Podatki o transakcijah (znesek, datum, kategorija, opis).</li>
+            <li>Podatki o proračunih (mesečni prihodki in odhodki).</li>
+        </ul>
+        <p><strong>Izhodi:</strong></p>
+        <ul>
+            <li>Shranjeni podatki v bazi podatkov.</li>
+            <li>Potrditev uspešnega shranjevanja.</li>
+        </ul>
+        <p><strong>Postopek:</strong></p>
+        <ul>
+            <li>Uporabnik pošlje podatke preko aplikacije.</li>
+            <li>Strežnik preveri in shrani podatke v bazo podatkov.</li>
+            <li>Strežnik vrne potrditev o uspešnem shranjevanju.</li>
+        </ul>
+    </div>
+
+    <div class="functionality">
+        <h2>3. Analiza podatkov in generiranje poročil</h2>
+        <p><strong>Opis:</strong> Strežnik analizira podatke o transakcijah in proračunih ter generira poročila in priporočila za uporabnike.</p>
+        <p><strong>Vhodi:</strong></p>
+        <ul>
+            <li>Zgodovina transakcij.</li>
+            <li>Podatki o proračunih.</li>
+        </ul>
+        <p><strong>Izhodi:</strong></p>
+        <ul>
+            <li>Poročila o mesečni porabi.</li>
+            <li>Priporočila za varčevanje.</li>
+        </ul>
+        <p><strong>Postopek:</strong></p>
+        <ul>
+            <li>Strežnik analizira podatke z algoritmi za analizo vzorcev.</li>
+            <li>Generira poročila in priporočila.</li>
+            <li>Pošlje poročila uporabniku preko aplikacije.</li>
+        </ul>
+    </div>
+
+    <div class="functionality">
+        <h2>6. Obveščanje in opozorila</h2>
+        <p><strong>Opis:</strong> Strežnik pošilja obvestila uporabnikom o pomembnih finančnih dogodkih.</p>
+        <p><strong>Vhodi:</strong></p>
+        <ul>
+            <li>Zapadli računi.</li>
+            <li>Presežki proračuna.</li>
+            <li>Doseženi finančni cilji.</li>
+        </ul>
+        <p><strong>Izhodi:</strong></p>
+        <ul>
+            <li>Obvestila na zaslonu ali po e-pošti.</li>
+        </ul>
+        <p><strong>Postopek:</strong></p>
+        <ul>
+            <li>Strežnik spremlja finančne dogodke.</li>
+            <li>Pošlje obvestila uporabniku, ko se zgodi pomemben dogodek.</li>
+        </ul>
+    </div>
+
+    <div class="functionality">
+        <h2>7. Varnostni mehanizmi</h2>
+        <p><strong>Opis:</strong> Strežnik zagotavlja varnost podatkov z uporabo šifriranja in drugih varnostnih mehanizmov.</p>
+        <p><strong>Vhodi:</strong></p>
+        <ul>
+            <li>Podatki o uporabnikih in transakcijah.</li>
+        </ul>
+        <p><strong>Izhodi:</strong></p>
+        <ul>
+            <li>Šifrirani podatki v bazi podatkov.</li>
+        </ul>
+        <p><strong>Postopek:</strong></p>
+        <ul>
+            <li>Strežnik šifrira podatke pred shranjevanjem v bazo.</li>
+        </ul>
+    </div>
+
+    <h2>UML diagram primerov uporabe</h2>
+    <p>Spodaj je prikazan UML diagram, ki prikazuje interakcijo uporabnika in drugih sistemov s strežnikom.</p>
+    <img src="uml-diagram-streznik.png" alt="UML diagram primerov uporabe" style="max-width: 100%; height: auto;">
+</body>
+</html>

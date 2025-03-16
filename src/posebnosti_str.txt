@@ -1,0 +1,24 @@
+Posebnosti strežnika:
+
+1. Uporaba Node.js z Express.js:
+   - Strežnik bo razvit z uporabo Node.js in Express.js za hitro in skalabilno izvajanje.
+   - Express.js bo uporabljen za usmerjanje zahtev in upravljanje API-jev.
+
+2. Shranjevanje podatkov v MongoDB:
+   - Podatki bodo shranjeni v MongoDB, dokumentno usmerjeno bazo podatkov, ki omogoča fleksibilno shranjevanje.
+   - MongoDB bo uporabljena za shranjevanje uporabniških podatkov, transakcij, proračunov in ciljev.
+
+3. Avtentikacija z JWT (JSON Web Tokens):
+   - Strežnik bo uporabljal JWT za avtentikacijo uporabnikov.
+   - JWT bodo uporabljeni za varno preverjanje identitete uporabnikov.
+
+4. Varnostni mehanizmi:
+   - Vsi občutljivi podatki bodo šifrirani v bazi podatkov.
+
+5. Sinhronizacija podatkov:
+   - Strežnik bo upravljal sinhronizacijo podatkov med napravami uporabnika.
+   - Sinhronizacija bo potekala v realnem času ob vsaki spremembi podatkov.
+
+6. Obveščanje uporabnikov:
+   - Strežnik bo pošiljal obvestila uporabnikom o pomembnih finančnih dogodkih (npr. presežek proračuna, dosežen cilj).
+   - Obvestila bodo poslana preko e-pošte ali na odjemalec.

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Podatkovni model</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+        .entity {
+            margin-bottom: 30px;
+        }
+        .entity h2 {
+            color: #555;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .entity p {
+            margin: 10px 0;
+        }
+        .entity ul {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Podatkovni model</h1>
+
+    <div class="entity">
+        <h2>1. Uporabnik (User)</h2>
+        <p><strong>Atributi:</strong></p>
+        <ul>
+            <li><code>id</code> (unikaten identifikator, primarni ključ)</li>
+            <li><code>username</code> (uporabniško ime)</li>
+            <li><code>email</code> (e-poštni naslov)</li>
+            <li><code>password_hash</code> (šifrirano geslo)</li>
+            <li><code>created_at</code> (datum registracije)</li>
+            <li><code>updated_at</code> (datum zadnje posodobitve)</li>
+        </ul>
+        <p><strong>Opis:</strong> Entiteta <code>Uporabnik</code> predstavlja uporabnika aplikacije. Vsak uporabnik ima svoje podatke, ki so potrebni za prijavo in upravljanje financ.</p>
+    </div>
+
+    <div class="entity">
+        <h2>2. Transakcija (Transaction)</h2>
+        <p><strong>Atributi:</strong></p>
+        <ul>
+            <li><code>id</code> (unikaten identifikator, primarni ključ)</li>
+            <li><code>user_id</code> (tuji ključ, povezava z uporabnikom)</li>
+            <li><code>amount</code> (znesek transakcije)</li>
+            <li><code>date</code> (datum transakcije)</li>
+            <li><code>category</code> (kategorija transakcije, npr. hrana, transport, zabava)</li>
+            <li><code>description</code> (opis transakcije, opcijsko)</li>
+            <li><code>type</code> (tip transakcije: prihodek ali odhodek)</li>
+        </ul>
+        <p><strong>Opis:</strong> Entiteta <code>Transakcija</code> predstavlja posamezno finančno transakcijo, ki jo uporabnik vnese ali avtomatsko uvozi iz bančnega računa.</p>
+    </div>
+
+    <div class="entity">
+        <h2>3. Proračun (Budget)</h2>
+        <p><strong>Atributi:</strong></p>
+        <ul>
+            <li><code>id</code> (unikaten identifikator, primarni ključ)</li>
+            <li><code>user_id</code> (tuji ključ, povezava z uporabnikom)</li>
+            <li><code>month</code> (mesec proračuna)</li>
+            <li><code>year</code> (leto proračuna)</li>
+            <li><code>income</code> (skupni prihodki za mesec)</li>
+            <li><code>expenses</code> (skupni odhodki za mesec)</li>
+            <li><code>savings_goal</code> (cilj varčevanja za mesec)</li>
+        </ul>
+        <p><strong>Opis:</strong> Entiteta <code>Proračun</code> predstavlja mesečni proračun uporabnika, ki vključuje prihodke, odhodke in cilje varčevanja.</p>
+    </div>
+
+    <div class="entity">
+        <h2>4. Kategorija (Category)</h2>
+        <p><strong>Atributi:</strong></p>
+        <ul>
+            <li><code>id</code> (unikaten identifikator, primarni ključ)</li>
+            <li><code>name</code> (ime kategorije, npr. hrana, transport, zabava)</li>
+        </ul>
+        <p><strong>Opis:</strong> Entiteta <code>Kategorija</code> predstavlja kategorije, v katere so razvrščene transakcije. Kategorije so lahko privzete ali personalizirane za vsakega uporabnika.</p>
+    </div>
+
+    <div class="entity">
+        <h2>6. Obvestilo (Notification)</h2>
+        <p><strong>Atributi:</strong></p>
+        <ul>
+            <li><code>id</code> (unikaten identifikator, primarni ključ)</li>
+            <li><code>user_id</code> (tuji ključ, povezava z uporabnikom)</li>
+            <li><code>message</code> (sporočilo obvestila)</li>
+            <li><code>type</code> (tip obvestila, npr. opozorilo o presežku proračuna)</li>
+            <li><code>created_at</code> (datum obvestila)</li>
+            <li><code>read</code> (stanje: prebrano/neprebrano)</li>
+        </ul>
+        <p><strong>Opis:</strong> Entiteta <code>Obvestilo</code> predstavlja obvestila, ki jih uporabnik prejme od aplikacije, kot so opozorila o presežkih proračuna ali doseženih ciljih.</p>
+    </div>
+
+    <h2>ER diagram</h2>
+    <p>Spodaj je prikazan ER diagram, ki prikazuje entitete in njihove relacije v podatkovnem modelu.</p>
+    <img src="er-diagram.png" alt="ER diagram" style="max-width: 100%; height: auto;">
+</body>
+</html>
