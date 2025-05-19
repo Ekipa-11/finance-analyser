@@ -5,6 +5,8 @@ import './manifest.json';
 // register your SW
 import './js/pwa.js';
 
+import './icons/icon_testing.png';
+
 // normalize page name
 const raw = window.location.pathname.split('/').pop();
 const page = (!raw || raw === '') ? 'login.html' : raw;

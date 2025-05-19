@@ -18,11 +18,28 @@ module.exports = {
   },
   module: {
     rules: [
-      { test: /\.css$/, use: ['style-loader','css-loader'] },
+      { test: /\.css$/, use: ['style-loader', 'css-loader'] },
       {
         test: /manifest\.json$/,
         type: 'asset/resource',
         generator: { filename: '[name][ext]' }
+      },
+      {
+        test: /\.(png|jpe?g|svg|jpg)$/,
+        type: 'asset/resource',
+        generator: {
+          filename: (pathData) => {
+            // preserve subfolders under src/, so src/icons/* → dist/icons/*
+            const filepath = pathData.filename.replace(/\\/g, '/');
+            if (filepath.startsWith('src/icons/')) {
+              return 'icons/[name][ext]';
+            }
+            if (filepath.startsWith('src/screenshots/')) {
+              return 'screenshots/[name][ext]';
+            }
+            return '[name][ext]';
+          }
+        }
       }
     ]
   },
@@ -44,7 +61,7 @@ module.exports = {
     historyApiFallback: {
       index: '/login.html',
       rewrites: [
-        { from: /^\/login/,  to: '/login.html' },
+        { from: /^\/login/, to: '/login.html' },
         { from: /^\/budget/, to: '/budget.html' }
       ]
     },

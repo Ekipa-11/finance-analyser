@@ -1,17 +1,37 @@
 {
   "name": "Finance PWA (Stub)",
   "short_name": "FinPWA",
-  "start_url": "login.html",
+  "description": "A Progressive Web App for Finance Analysis",
+  "start_url": "./login.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2a9d8f",
+  "orientation": "portrait",
+  "lang": "en",
+  "categories": ["finance", "productivity"],
+
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+    {
+      "src": "icons/icon_testing.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon_testing.png",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
   ],
-  "description": "A Progressive Web App for Finance Analysis",
-  "version": "1.0.0",
-  "author": "Your Name",
-  "homepage": "https://yourwebsite.com",
-  "license": "MIT"
+
+  "screenshots": [
+    {
+      "src": "icons/icon_testing.png",
+      "sizes": "640x360",
+      "type": "image/png",
+      "platform": "wide"
+    }
+  ]
 }
