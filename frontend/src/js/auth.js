@@ -1,20 +1,37 @@
 // src/js/auth.js
+import { login } from './api.js';
+
 export default function initAuth() {
-  const run = () => {
-    const btn = document.getElementById('login-btn');
-    console.log('[auth.js] button:', btn);
-    if (!btn) return;  // not on login page, bail
+  const form = document.getElementById('login-form');
+  const errorEl = document.getElementById('login-error');
+  if (!form) return; // not on login page
 
-    console.log('[auth.js] initializing login handler');
-    btn.addEventListener('click', () => {
-      localStorage.setItem('authToken', 'stub-token');
-      window.location.href = 'budget.html';
-    });
-  };
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', run);
-  } else {
-    run();
+  function showError(msg) {
+    errorEl.textContent = msg;
+    errorEl.classList.add('visible');
   }
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    errorEl.classList.remove('visible');
+
+    const username = form.username.value.trim();
+    const password = form.password.value.trim();
+
+    if (!username || !password) {
+      showError('Both fields are required.');
+      return;
+    }
+
+    try {
+      const { token, user } = await login(username, password);
+      // save to localStorage
+      localStorage.setItem('authToken', token);
+      localStorage.setItem('currentUser', user.username);
+      // redirect
+      window.location.href = 'budget.html';
+    } catch (err) {
+      showError(err.message);
+    }
+  });
 }

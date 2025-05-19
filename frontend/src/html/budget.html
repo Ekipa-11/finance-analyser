@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -7,13 +8,46 @@
   <meta name="theme-color" content="#2a9d8f">
   <link rel="manifest" href="manifest.json">
 </head>
+
 <body>
-  <header>
-    <h1>Budget Dashboard</h1>
-    <button id="logout-btn">🚪 Logout</button>
-  </header>
-  <main>
-    <p>👋 Welcome! (This is your budget screen.)</p>
-  </main>
+  <div class="budget-container">
+    <header class="budget-header">
+      <h1>Budget Dashboard</h1>
+      <button id="logout-btn" class="btn-logout">Logout</button>
+    </header>
+
+    <section class="budget-main">
+      <ul id="entries-list" class="entries-list"></ul>
+
+      <form id="entry-form" class="entry-form">
+        <div class="form-group">
+          <label for="type">Type</label>
+          <select name="type" id="type">
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="amount">Amount</label>
+          <input type="number" id="amount" name="amount" required />
+        </div>
+        <div class="form-group">
+          <label for="category">Category</label>
+          <input type="text" id="category" name="category" required />
+        </div>
+        <div class="form-group">
+          <label for="date">Date</label>
+          <input type="date" id="date" name="date" required />
+        </div>
+        <div class="form-group form-full">
+          <label for="description">Description</label>
+          <input type="text" id="description" name="description" />
+        </div>
+        <button type="submit" class="btn-submit">Add Entry</button>
+      </form>
+    </section>
+  </div>
 </body>
+
+
 </html>

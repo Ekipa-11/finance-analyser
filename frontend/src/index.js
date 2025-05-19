@@ -5,19 +5,19 @@ import './manifest.json';
 // register your SW
 import './js/pwa.js';
 
-import './icons/icon_testing.png';
+
 
 // normalize page name
 const raw = window.location.pathname.split('/').pop();
 const page = (!raw || raw === '') ? 'login.html' : raw;
 console.log('[index.js] Detected page:', page);
 
-// import the right module immediately
+
 if (page === 'login.html') {
   import('./js/auth.js')
     .then(mod => {
       console.log('[index.js] auth.js module loaded');
-      mod.default();                // call its initializer
+      mod.default();                
     })
     .catch(err => console.error('[index.js] auth.js failed:', err));
 } else if (page === 'budget.html') {

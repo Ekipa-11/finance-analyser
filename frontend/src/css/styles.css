@@ -1,0 +1,207 @@
+/* Basic reset & font */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* Container */
+.login-container {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  text-align: center;
+}
+.login-container h1 {
+  margin-bottom: 1.5rem;
+  color: #2a9d8f;
+}
+
+/* Form */
+.form-group {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+.form-group input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Button */
+button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #2a9d8f;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #227a6b;
+}
+
+/* Error message */
+.error {
+  margin-top: 0.75rem;
+  color: #c00;
+  font-size: 0.875rem;
+  display: none;
+}
+.error.visible {
+  display: block;
+}
+
+
+/* -------- Container & Layout -------- */
+
+.budget-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.budget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.budget-header h1 {
+  font-size: 1.75rem;
+  color: #2a9d8f;
+}
+
+.btn-logout {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn-logout:hover {
+  background: #c0392b;
+}
+
+.budget-main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+/* On wider screens, show list and form side by side */
+@media (min-width: 600px) {
+  .budget-main {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+/* -------- Entry List -------- */
+
+.entries-list {
+  list-style: none;
+  padding: 0;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.entries-list li {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+}
+.entries-list li:last-child {
+  border-bottom: none;
+}
+
+/* Positive vs Negative styling */
+.entries-list li.expense {
+  background: #fdecea;
+}
+.entries-list li.income {
+  background: #e8f8f5;
+}
+
+/* -------- Entry Form -------- */
+
+.entry-form {
+  background: #fafafa;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.entry-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.entry-form .form-group label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: bold;
+}
+
+.entry-form .form-group input,
+.entry-form .form-group select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.entry-form .form-group.form-full {
+  grid-column: 1 / -1;  /* span both columns on wide screens */
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 0.75rem;
+  background: #2a9d8f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.btn-submit:hover {
+  background: #227a6b;
+}
+
+/* On wide screens, make the form a two-column grid */
+@media (min-width: 600px) {
+  .entry-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  /* ensure the submit button spans both columns */
+  .btn-submit {
+    grid-column: 1 / -1;
+  }
+}
