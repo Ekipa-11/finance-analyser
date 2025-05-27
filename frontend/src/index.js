@@ -5,6 +5,10 @@ import './manifest.json';
 // register your SW
 import './js/pwa.js';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap';
+
+
 
 
 // normalize page name

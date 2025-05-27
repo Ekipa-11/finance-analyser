@@ -14,5 +14,9 @@
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.0",
     "workbox-webpack-plugin": "^7.0.0"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.6"
   }
 }
