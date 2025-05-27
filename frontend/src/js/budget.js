@@ -71,4 +71,17 @@ export default function initBudget() {
       error.textContent = err.message || 'Failed to add entry';
     }
   });
+
+  // 5) Logout button
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      // remove only your auth items
+      localStorage.removeItem('token');
+      localStorage.removeItem('currentUser');
+      // redirect back to login
+      window.location.href = 'login.html';
+    });
+  }
+
 }
