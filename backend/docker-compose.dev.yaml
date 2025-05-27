@@ -1,0 +1,27 @@
+services:
+# services from main docker-compose.yaml
+  fin-analy-express:
+    extends:
+      file: docker-compose.yaml
+      service: fin-analy-express
+  mongo:
+    extends:
+      file: docker-compose.yaml
+      service: mongo
+      
+# debug mongo-express for development
+  mongo-express:
+    image: mongo-express:latest
+    ports:
+      - "8080:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+    networks:
+      - fin-analy-network
+
+networks:
+  fin-analy-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
