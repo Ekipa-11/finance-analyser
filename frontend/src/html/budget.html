@@ -2,52 +2,87 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Budget – Finance PWA</title>
-  <meta name="theme-color" content="#2a9d8f">
-  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2a9d8f" />
+  <link rel="manifest" href="manifest.json" />
 </head>
 
-<body>
-  <div class="budget-container">
-    <header class="budget-header">
-      <h1>Budget Dashboard</h1>
-      <button id="logout-btn" class="btn-logout">Logout</button>
-    </header>
+<body class="bg-light">
+  <div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="h3">Budget Dashboard</h1>
+      <button id="logout-btn" class="btn btn-danger">Logout</button>
+    </div>
 
-    <section class="budget-main">
-      <ul id="entries-list" class="entries-list"></ul>
+    <!-- 2x2 Grid -->
+    <div class="row g-4">
+      <!-- Quadrant 1: Form -->
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Add Entry</h5>
+            <form id="entry-form">
+              <div class="mb-3">
+                <label for="type" class="form-label">Type</label>
+                <select class="form-select" id="type" name="type">
+                  <option value="income">Income</option>
+                  <option value="expense">Expense</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="amount" class="form-label">Amount</label>
+                <input type="number" class="form-control" id="amount" name="amount" required />
+              </div>
+              <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <input type="text" class="form-control" id="category" name="category" required />
+              </div>
+              <div class="mb-3">
+                <label for="date" class="form-label">Date</label>
+                <input type="date" class="form-control" id="date" name="date" required />
+              </div>
+              <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <input type="text" class="form-control" id="description" name="description" />
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Add Entry</button>
+            </form>
+          </div>
+        </div>
+      </div>
 
-      <form id="entry-form" class="entry-form">
-        <div class="form-group">
-          <label for="type">Type</label>
-          <select name="type" id="type">
-            <option value="income">Income</option>
-            <option value="expense">Expense</option>
-          </select>
+      <!-- Quadrant 2: Entry List -->
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Entries</h5>
+            <ul id="entries-list" class="list-group"></ul>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="amount">Amount</label>
-          <input type="number" id="amount" name="amount" required />
+      </div>
+
+      <!-- Quadrant 3: Empty -->
+      <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body d-flex align-items-center justify-content-center text-muted">
+            <p>Reserved for future content</p>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="category">Category</label>
-          <input type="text" id="category" name="category" required />
+      </div>
+
+      <!-- Quadrant 4: Empty -->
+      <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body d-flex align-items-center justify-content-center text-muted">
+            <p>Reserved for future content</p>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="date">Date</label>
-          <input type="date" id="date" name="date" required />
-        </div>
-        <div class="form-group form-full">
-          <label for="description">Description</label>
-          <input type="text" id="description" name="description" />
-        </div>
-        <button type="submit" class="btn-submit">Add Entry</button>
-      </form>
-    </section>
+      </div>
+    </div>
   </div>
 </body>
-
 
 </html>

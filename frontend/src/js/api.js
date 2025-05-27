@@ -1,70 +1,50 @@
-// src/js/api.js
+const API_BASE = process.env.API_BASE_URL || '/api';
 
-// ----- MOCK LOGIN -----
-export function login(username, password) {
-  return new Promise((resolve, reject) => {
-    // simulate network latency
-    setTimeout(() => {
-      // simple stub: accept any non-empty credentials
-      if (username && password) {
-        resolve({
-          token: 'mock-token-123',
-          user: { username }
-        });
-      } else {
-        reject(new Error('Invalid credentials'));
-      }
-    }, 500); // 0.5s delay
+export async function login(email, password) {
+  const res = await fetch(`${API_BASE}/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
   });
-}
 
-// ----- MOCK BUDGET DATA -----
-let _entries = [
-  {
-    id: 1,
-    type: 'income',
-    amount: 2000,
-    category: 'Salary',
-    date: '2025-05-01',
-    description: 'May salary'
-  },
-  {
-    id: 2,
-    type: 'expense',
-    amount: 50,
-    category: 'Groceries',
-    date: '2025-05-02',
-    description: 'Weekly groceries'
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Login failed');
   }
-];
 
-// simulate auto-increment ID
-let _nextId = 3;
-
-/**
- * Get all entries for the current user.
- */
-export function getEntries() {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve([..._entries]);
-    }, 300);
-  });
+  const data = await res.json();
+  localStorage.setItem('token', data.token);
+  return data;
 }
 
 /**
- * Add a new entry.
- * @param {object} entry - { type, amount, category, date, description }
+ * Helper for auth header
  */
-export function addEntry(entry) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (!entry.type || !entry.amount) {
-        return reject(new Error('Invalid entry'));
-      }
-      const newEntry = { id: _nextId++, ...entry };
-      _entries.push(newEntry);
-      resolve(newEntry);
-    }, 300);
+function authHeader() {
+  const token = localStorage.getItem('token');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+/**
+ * Fetch all entries (transactions)
+ */
+export async function getEntries() {
+  const res = await fetch(`${API_BASE}/transactions`, {
+    headers: { 'Content-Type': 'application/json', ...authHeader() }
   });
+  if (!res.ok) throw new Error('Failed to fetch entries');
+  return res.json();
+}
+
+/**
+ * Add a new entry
+ */
+export async function addEntry(entry) {
+  const res = await fetch(`${API_BASE}/transactions`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeader() },
+    body: JSON.stringify(entry)
+  });
+  if (!res.ok) throw new Error('Failed to add entry');
+  return res.json();
 }

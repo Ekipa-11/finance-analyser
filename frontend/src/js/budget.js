@@ -2,51 +2,73 @@
 import { getEntries, addEntry } from './api.js';
 
 export default function initBudget() {
-  const logoutBtn = document.getElementById('logout-btn');
-  if (!logoutBtn) return; // not on budget page
-
-  // guard
-  if (!localStorage.getItem('authToken')) {
-    return window.location.replace('login.html');
+  // 1) Auth guard
+  const token = localStorage.getItem('token');
+  if (!token) {
+    return window.location.href = 'login.html';
   }
 
-  logoutBtn.addEventListener('click', () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('currentUser');
-    window.location.replace('login.html');
-  });
-
+  // 2) Grab DOM elements
   const listEl = document.getElementById('entries-list');
   const form = document.getElementById('entry-form');
+  const error = document.createElement('p');
+  error.className = 'text-danger mt-2';
+  form.appendChild(error);
 
-  // 1) render existing entries
-  getEntries().then(entries => {
-    listEl.innerHTML = entries.map(e =>
-      `<li>${e.date} – ${e.category}: ${e.type === 'expense' ? '-' : '+'}${e.amount} (${e.description})</li>`
-    ).join('');
-  });
-
-  // 2) wire up add-entry form
-  if (form) {
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      const entry = {
-        type: form.type.value,
-        amount: parseFloat(form.amount.value),
-        category: form.category.value,
-        date: form.date.value,
-        description: form.description.value.trim()
-      };
-      try {
-        const newEntry = await addEntry(entry);
-        // append to list
-        const li = document.createElement('li');
-        li.textContent = `${newEntry.date} – ${newEntry.category}: ${newEntry.type==='expense'?'-':''}${newEntry.amount} (${newEntry.description})`;
-        listEl.appendChild(li);
-        form.reset();
-      } catch(err) {
-        console.error('Add entry failed:', err);
-      }
+  // 3) Render helper
+  function render(entries) {
+    listEl.innerHTML = '';
+    if (entries.length === 0) {
+      listEl.innerHTML = '<li class="list-group-item">No entries yet</li>';
+      return;
+    }
+    entries.forEach(e => {
+      const li = document.createElement('li');
+      li.className = 'list-group-item d-flex justify-content-between align-items-center';
+      const displayDate = new Date(e.date).toLocaleDateString();
+      li.innerHTML = `
+      <div>
+        <strong>${e.category}</strong> 
+        <span class="badge bg-${e.type === 'income' ? 'success' : 'danger'
+        } ms-2">${e.type}</span>
+        <div class="text-muted small">${displayDate}</div>
+      </div>
+      <span>${e.amount.toFixed(2)}</span>
+    `;
+      listEl.append(li);
     });
   }
+
+  // 4) Initial fetch + render
+  getEntries()
+    .then(render)
+    .catch(err => {
+      console.error(err);
+      listEl.innerHTML = '<li class="list-group-item text-danger">Failed to load entries</li>';
+    });
+
+  // 5) Hook up the form
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    error.textContent = '';
+
+    const entry = {
+      type: form.type.value,
+      amount: parseFloat(form.amount.value),
+      category: form.category.value.trim(),
+      date: form.date.value.split('T')[0], // Only keep the date part
+      description: form.description.value.trim(),
+    };
+
+    try {
+      const newEntry = await addEntry(entry);
+      // clear inputs
+      form.reset();
+      // re-fetch and re-render (or just append newEntry)
+      getEntries().then(render);
+    } catch (err) {
+      console.error(err);
+      error.textContent = err.message || 'Failed to add entry';
+    }
+  });
 }

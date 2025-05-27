@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { GenerateSW } = require('workbox-webpack-plugin');
+const DotenvWebpackPlugin = require('dotenv-webpack');
 
 if (1 == 2) {
   plugins.push(new GenerateSW({
@@ -54,7 +55,8 @@ module.exports = {
       filename: 'budget.html',
       inject: 'body'
     }),
-    new GenerateSW({ clientsClaim: true, skipWaiting: true })
+    new GenerateSW({ clientsClaim: true, skipWaiting: true }),
+    new DotenvWebpackPlugin({ systemvars: true })
   ],
   devServer: {
     static: './dist',
@@ -64,6 +66,13 @@ module.exports = {
         { from: /^\/login/, to: '/login.html' },
         { from: /^\/budget/, to: '/budget.html' }
       ]
+    },
+    proxy: {
+      '/api': {
+        target: process.env.API_BASE_URL,  
+        changeOrigin: true,
+        secure: false,
+      },
     },
     port: 8080,
     open: true

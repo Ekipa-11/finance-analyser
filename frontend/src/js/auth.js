@@ -2,33 +2,33 @@
 import { login } from './api.js';
 
 export default function initAuth() {
-  const form = document.getElementById('login-form');
+  const form    = document.getElementById('login-form');
   const errorEl = document.getElementById('login-error');
-  if (!form) return; // not on login page
+  if (!form) return;
 
   function showError(msg) {
     errorEl.textContent = msg;
-    errorEl.classList.add('visible');
   }
 
   form.addEventListener('submit', async e => {
     e.preventDefault();
-    errorEl.classList.remove('visible');
+    errorEl.textContent = '';
 
-    const username = form.username.value.trim();
+    const email = form.email.value.trim();
     const password = form.password.value.trim();
 
-    if (!username || !password) {
+    if (!email || !password) {
       showError('Both fields are required.');
       return;
     }
 
     try {
-      const { token, user } = await login(username, password);
-      // save to localStorage
-      localStorage.setItem('authToken', token);
-      localStorage.setItem('currentUser', user.username);
-      // redirect
+      const { token, user } = await login(email, password);
+
+
+      localStorage.setItem('token', token);
+      localStorage.setItem('currentUser', email);
+
       window.location.href = 'budget.html';
     } catch (err) {
       showError(err.message);
