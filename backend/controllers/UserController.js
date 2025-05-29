@@ -128,7 +128,9 @@ async function login(req, res) {
 
         // generate JWT token
         const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET || "default_jwt_secret", { expiresIn: "1h" });
-
+        
+        res.setHeader("X-AuthToken", token);
+        res.setHeader("Authorization", `Bearer ${token}`);
         res.json({ token });
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -175,6 +177,8 @@ async function register(req, res) {
         // Generate JWT token
         const token = jwt.sign({ id: savedUser._id, email: savedUser.email }, process.env.JWT_SECRET || "default_jwt_secret", { expiresIn: "1h" });
 
+        res.setHeader("X-AuthToken", token);
+        res.setHeader("Authorization", `Bearer ${token}`);
         res.status(201).json({ token });
     } catch (err) {
         res.status(500).json({ message: err.message });

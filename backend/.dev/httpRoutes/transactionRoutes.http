@@ -1,0 +1,54 @@
+# @name login
+POST http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+  "email": "testuser1@email.com",
+  "password": "testpassword"
+}
+
+###
+@authToken = {{login.response.headers.X-AuthToken}}
+###
+
+### GET transactions
+GET http://localhost:3000/api/transactions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### POST create
+### create expense 1
+POST http://localhost:3000/api/transactions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "amount": 170.5,
+  "category": "Groceries",
+  "description": "Weekly grocery shopping",
+  "type": "expense"
+}
+
+### create expense 2
+POST http://localhost:3000/api/transactions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "amount": 169.11,
+  "category": "Toy Store",
+  "description": "Kids' birthday gift",
+  "type": "expense"
+}
+
+### create income
+POST http://localhost:3000/api/transactions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "amount": 1000,
+  "category": "Salary",
+  "description": "Monthly salary payment",
+  "type": "income"
+}

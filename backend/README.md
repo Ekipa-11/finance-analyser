@@ -14,14 +14,6 @@ Some environment variables are set in `docker-compose.yaml` and `docker-compose.
 docker compose up -d
 ```
 
-**development**:
-```bash
-docker compose -f docker-compose.dev.yml up -d --build
-```
-or my recommended way (a 1 liner):
-```bash
-docker compose -f docker-compose.dev.yaml down && docker compose -f docker-compose.dev.yaml up --build -d && docker compose logs fin-analy-express -f --no-log-prefix
-```
 
 ## Environment Variables
 
@@ -32,6 +24,28 @@ PORT=3000 # set in docker-compose.yaml
 API_PREFIX=/api # set in docker-compose.yaml
 JWT_SECRET=default_jwt_secret
 ```
+
+## Development
+
+### Running docker
+
+```bash
+docker compose -f docker-compose.dev.yaml up -d --build
+```
+or my recommended way (a 1 liner):
+```bash
+docker compose -f docker-compose.dev.yaml down && docker compose -f docker-compose.dev.yaml up --build -d && docker compose logs fin-analy-express -f --no-log-prefix
+```
+
+You can use Docker to run the backend with the development configuration.  
+
+This adds mongo-express as a web interface for MongoDB, which is useful for development and debugging.  
+Available at `http://localhost:8080`, with default credentials `admin:pass`
+
+### HTTP Client
+You can use the [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) extension for VS Code to test the API endpoints.  
+You can find the HTTP requests in the `.dev/httpRoutes` folder.  
+Read more about it in the corresponding [README](.dev/httpRoutes/README.md).
 
 
 
