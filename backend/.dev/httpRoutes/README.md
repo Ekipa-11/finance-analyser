@@ -12,3 +12,20 @@ This folder is for the vscode extension `humao.rest-client` which allows you to 
 
 Login and Register are in UserRoutes.  
 But a login is at the start of each file for token fetching.
+
+### Reports
+
+[readyUserForReport.http](readyUserForReport.http) allows you to get a user ready for report generation.  
+Then just run the [getReport.sh](getReport.sh) script to generate the report or run the curl command in the terminal:
+```bash
+curl -H "Authorization: Bearer ${api_token}" http://localhost:3000/api/export/ -o responseFiles/transactions.csv
+```
+where `${api_token}` is the authentication token.
+
+The same applies to the csv export, just run the [getTransactions.sh](getTransactions.sh) script or run the curl command in the terminal:
+```bash
+curl -H "Authorization: Bearer ${api_token}" http://localhost:3000/api/export/ -o responseFiles/transactions.csv
+```
+where `${api_token}` is the authentication token.
+
+The response files will be saved in the `responseFiles` folder.
