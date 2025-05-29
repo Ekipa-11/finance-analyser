@@ -61,6 +61,7 @@ Check [Environment Variables](#environment-variables) section above.
     - GET /api/users - Returns a list of all users.
     - GET /api/users/:id - Returns a specific user by ID.
     - GET /api/users/:id/all - Returns all data for a specific user by ID. (including transactions, budgets, notifications)
+    - GET /api/users/me - Returns the currently authenticated user. (With all data)
     - PUT /api/users/:id - Updates a specific user by ID.
     - DELETE /api/users/:id - Deletes a specific user by ID.
 
@@ -91,6 +92,10 @@ Check [Environment Variables](#environment-variables) section above.
     - PUT /api/notifications/:id/read- Marks a notification as read.
     - PUT /api/notifications/:id/unread - Marks a notification as unread.
     - DELETE /api/notifications/:id - Deletes a notification.
+
+7. Exports:
+    - GET /api/export - exports all transactions to a CSV file.
+    - GET /api/report - generates a report of the user's finances as a PDF file.
 
 ## Data Structures
 

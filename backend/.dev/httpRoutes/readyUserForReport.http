@@ -1,0 +1,154 @@
+### POST LOGIN
+# @name login
+POST http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+  "email": "reportuser1@email.com",
+  "password": "testpassword"
+}
+
+###
+@authTokenLogin = {{login.response.headers.X-AuthToken}}
+###
+
+### GET user
+# @name getMe
+GET http://localhost:3000/api/users/me
+Authorization: Bearer {{authTokenLogin}}
+Content-Type: application/json
+
+###
+@userId = {{getMe.response.body.id}}
+###
+
+### DELETE user
+DELETE http://localhost:3000/api/users/{{userId}}/
+Authorization: Bearer {{authTokenLogin}}
+Content-Type: application/json
+
+### register user
+# @name register
+POST http://localhost:3000/api/register
+Content-Type: application/json
+
+{
+  "email": "reportuser1@email.com",
+  "username": "reportuser1",
+  "password": "testpassword"
+}
+
+###
+@authToken = {{register.response.headers.X-AuthToken}}
+###
+
+### create expense 1 - now
+POST http://localhost:3000/api/transactions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "amount": 170.5,
+  "category": "Groceries",
+  "description": "Weekly grocery shopping",
+  "type": "expense"
+}
+
+### create expense 2 - now
+POST http://localhost:3000/api/transactions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "amount": 169.11,
+  "category": "Toy Store",
+  "description": "Kids' birthday gift",
+  "type": "expense"
+}
+
+### create income - now
+POST http://localhost:3000/api/transactions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "amount": 1000,
+  "category": "Salary",
+  "description": "Monthly salary payment",
+  "type": "income"
+}
+
+### create expense 3 - in the past
+POST http://localhost:3000/api/transactions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "amount": 200,
+  "category": "Utilities",
+  "description": "Electricity bill",
+  "type": "expense",
+  "date": "2023-09-01T01:00:00Z"
+}
+
+### create expense 4 - in the past
+POST http://localhost:3000/api/transactions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "amount": 300,
+  "category": "Rent",
+  "description": "Monthly rent payment",
+  "type": "expense",
+  "date": "2023-09-01T01:00:00Z"
+}
+
+### create income 2 - in the past
+POST http://localhost:3000/api/transactions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "amount": 169,
+  "category": "Freelance Work",
+  "description": "Payment for freelance project named 'Project X' for client in Ivory Coast",
+  "type": "income",
+  "date": "2023-09-15T02:00:00Z"
+}
+
+### create income 3 - in the past
+POST http://localhost:3000/api/transactions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "amount": 0.01,
+  "category": "Luck",
+  "description": "A penny I found on the street",
+  "type": "income",
+  "date": "2023-09-15T02:00:00Z"
+}
+
+
+### create budget 1 - now
+POST http://localhost:3000/api/budgets
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "income": 1000,
+  "expenses": 400
+}
+
+### create budget 2 - in the past
+POST http://localhost:3000/api/budgets
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "income": 1500,
+  "expenses": 600,
+  "month": 9,
+  "year": 2023
+}

@@ -9,6 +9,12 @@ router.get("/", UserController.list);
 
 /*
  * GET
+ * me
+ */
+router.get("/me", UserController.me);
+
+/*
+ * GET
  */
 router.get("/:id", UserController.show);
 

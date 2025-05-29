@@ -1,4 +1,5 @@
 const TransactionModel = require("../models/TransactionModel.js");
+var CategoryModel = require("../models/CategoryModel.js");
 
 /**
  * TransactionController.js
@@ -48,6 +49,21 @@ async function create(req, res) {
         return res.status(400).json({ message: "Missing required fields. All fields: amount, category, description, type" });
 
     if (!req.user || !req.user.id) return res.status(401).json({ message: "Unauthorized: User ID is missing" });
+
+    // create category if name does not yet exist
+    const existingCategory = await CategoryModel.findOne({ name: req.body.category });
+    if (!existingCategory) {
+        const newCategory = new CategoryModel({
+            name: req.body.category,
+            created_at: new Date(),
+            updated_at: new Date(),
+        });
+        try {
+            await newCategory.save();
+        } catch (err) {
+            return res.status(500).json({ message: "Error when creating new Category for this Transaction", error: err });
+        }
+    }
 
     const Transaction = new TransactionModel({
         amount: req.body.amount,
