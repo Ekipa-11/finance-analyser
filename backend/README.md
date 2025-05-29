@@ -16,7 +16,7 @@ docker compose up -d
 
 **development**:
 ```bash
-docker compose -f docker-compose.dev.yml up -d --build
+docker compose -f docker-compose.dev.yaml up -d --build
 ```
 or my recommended way (a 1 liner):
 ```bash
