@@ -20,7 +20,7 @@ docker compose -f docker-compose.dev.yml up -d --build
 ```
 or my recommended way (a 1 liner):
 ```bash
-docker compose -f docker-compose.dev.yaml down && docker compose -f docker-compose.dev.yaml up --build -d && docker compose logs fin-analy-express -f
+docker compose -f docker-compose.dev.yaml down && docker compose -f docker-compose.dev.yaml up --build -d && docker compose logs fin-analy-express -f --no-log-prefix
 ```
 
 ## Environment Variables
