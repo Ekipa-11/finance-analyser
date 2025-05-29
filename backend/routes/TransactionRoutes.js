@@ -1,30 +1,30 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var TransactionController = require('../controllers/TransactionController.js');
+var TransactionController = require("../controllers/TransactionController.js");
 
 /*
  * GET
  */
-router.get('/', TransactionController.list);
+router.get("/", TransactionController.list);
 
 /*
  * GET
  */
-router.get('/:id', TransactionController.show);
+router.get("/:id", TransactionController.show);
 
 /*
  * POST
  */
-router.post('/', TransactionController.create);
+router.post("/", TransactionController.create);
 
 /*
  * PUT
  */
-router.put('/:id', TransactionController.update);
+router.put("/:id", TransactionController.update);
 
 /*
  * DELETE
  */
-router.delete('/:id', TransactionController.remove);
+router.delete("/:id", TransactionController.remove);
 
 module.exports = router;

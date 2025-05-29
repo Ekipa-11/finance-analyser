@@ -43,7 +43,7 @@ async function create(req, res) {
         // Check if every required field is present
         if (!req.body || !req.body.message || !req.body.type)
             return res.status(400).json({ message: "Missing required fields. All fields: message, type" });
-        
+
         const notification = new NotificationModel({
             user_id: req.user.id,
 
@@ -92,8 +92,7 @@ async function update_read(req, res) {
         notification.updated_at = new Date(); // Update the timestamp
         const updatedNotification = await notification.save();
         return res.json(updatedNotification);
-    }
-    catch (err) {
+    } catch (err) {
         return res.status(500).json({ message: "Error when updating the Notification.", error: err });
     }
 }
@@ -109,12 +108,10 @@ async function update_unread(req, res) {
         notification.updated_at = new Date(); // Update the timestamp
         const updatedNotification = await notification.save();
         return res.json(updatedNotification);
-    }
-    catch (err) {
+    } catch (err) {
         return res.status(500).json({ message: "Error when updating the Notification.", error: err });
     }
 }
-
 
 async function remove(req, res) {
     const id = req.params.id;
@@ -133,5 +130,5 @@ module.exports = {
     update,
     remove,
     update_read,
-    update_unread
+    update_unread,
 };

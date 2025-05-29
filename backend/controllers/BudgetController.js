@@ -68,10 +68,10 @@ async function update(req, res) {
         // Check if the user is authorized to update this budget
         if (Budget.user_id.toString() !== req.user.id) return res.status(403).json({ message: "You are not authorized to update this budget" });
 
-        Budget.month = typeof req.body.month !== "number"? req.body.month : Budget.month;
-        Budget.year = typeof req.body.year !== "number"? req.body.year : Budget.year;
-        Budget.income = typeof req.body.income !== "number"? req.body.income : Budget.income;
-        Budget.expenses = typeof req.body.expenses !== "number"? req.body.expenses : Budget.expenses;
+        Budget.month = typeof req.body.month !== "number" ? req.body.month : Budget.month;
+        Budget.year = typeof req.body.year !== "number" ? req.body.year : Budget.year;
+        Budget.income = typeof req.body.income !== "number" ? req.body.income : Budget.income;
+        Budget.expenses = typeof req.body.expenses !== "number" ? req.body.expenses : Budget.expenses;
         Budget.updated_at = Date.now();
 
         const savedBudget = await Budget.save();
