@@ -1,30 +1,30 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var CategoryController = require('../controllers/CategoryController.js');
+var CategoryController = require("../controllers/CategoryController.js");
 
 /*
  * GET
  */
-router.get('/', CategoryController.list);
+router.get("/", CategoryController.list);
 
 /*
  * GET
  */
-router.get('/:id', CategoryController.show);
+router.get("/:id", CategoryController.show);
 
 /*
  * POST
  */
-router.post('/', CategoryController.create);
+router.post("/", CategoryController.create);
 
 /*
  * PUT
  */
-router.put('/:id', CategoryController.update);
+router.put("/:id", CategoryController.update);
 
 /*
  * DELETE
  */
-router.delete('/:id', CategoryController.remove);
+router.delete("/:id", CategoryController.remove);
 
 module.exports = router;

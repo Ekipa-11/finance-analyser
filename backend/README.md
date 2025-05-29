@@ -16,7 +16,7 @@ docker compose up -d
 
 **development**:
 ```bash
-docker compose -f docker-compose.dev.yaml up -d --build
+docker compose -f docker-compose.dev.yml up -d --build
 ```
 or my recommended way (a 1 liner):
 ```bash
@@ -33,6 +33,28 @@ API_PREFIX=/api # set in docker-compose.yaml
 JWT_SECRET=default_jwt_secret
 ```
 
+## Development
+
+### Running docker
+
+```bash
+docker compose -f docker-compose.dev.yaml up -d --build
+```
+or my recommended way (a 1 liner):
+```bash
+docker compose -f docker-compose.dev.yaml down && docker compose -f docker-compose.dev.yaml up --build -d && docker compose logs fin-analy-express -f --no-log-prefix
+```
+
+You can use Docker to run the backend with the development configuration.  
+
+This adds mongo-express as a web interface for MongoDB, which is useful for development and debugging.  
+Available at `http://localhost:8080`, with default credentials `admin:pass`
+
+### HTTP Client
+You can use the [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) extension for VS Code to test the API endpoints.  
+You can find the HTTP requests in the `.dev/httpRoutes` folder.  
+Read more about it in the corresponding [README](.dev/httpRoutes/README.md).
+
 
 
 ## REST
@@ -47,6 +69,7 @@ Check [Environment Variables](#environment-variables) section above.
     - GET /api/users - Returns a list of all users.
     - GET /api/users/:id - Returns a specific user by ID.
     - GET /api/users/:id/all - Returns all data for a specific user by ID. (including transactions, budgets, notifications)
+    - GET /api/users/me - Returns the currently authenticated user. (With all data)
     - PUT /api/users/:id - Updates a specific user by ID.
     - DELETE /api/users/:id - Deletes a specific user by ID.
 
@@ -77,6 +100,10 @@ Check [Environment Variables](#environment-variables) section above.
     - PUT /api/notifications/:id/read- Marks a notification as read.
     - PUT /api/notifications/:id/unread - Marks a notification as unread.
     - DELETE /api/notifications/:id - Deletes a notification.
+
+7. Exports:
+    - GET /api/export - exports all transactions to a CSV file.
+    - GET /api/report - generates a report of the user's finances as a PDF file.
 
 ## Data Structures
 

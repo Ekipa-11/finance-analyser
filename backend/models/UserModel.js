@@ -10,12 +10,12 @@ var UserSchema = new Schema({
 });
 
 UserSchema.set("toJSON", {
-	transform: function (doc, ret) {
-		ret.id = doc._id;
-		delete ret._id;
-		delete ret.__v;
-		return ret;
-	},
+    transform: function (doc, ret) {
+        ret.id = doc._id;
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+    },
 });
 
 module.exports = mongoose.model("User", UserSchema);

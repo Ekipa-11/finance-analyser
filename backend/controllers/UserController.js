@@ -46,6 +46,7 @@ async function show(req, res) {
         });
     }
 }
+
 async function show_with_all(req, res) {
     const id = req.params.id;
     try {
@@ -66,6 +67,29 @@ async function show_with_all(req, res) {
         userJson.notifications = notifications;
         return res.json(userJson);
     } catch (err) {
+        return res.status(500).json({ message: "Error when getting User.", error: err });
+    }
+}
+
+async function me(req, res) {
+    try {
+        // Check if the user is authenticated
+        if (!req.user || !req.user.id) return res.status(401).json({ message: "Unauthorized: User ID is missing" });
+        // Fetch the authenticated user
+        const user = await UserModel.findOne({ _id: req.user.id });
+        if (!user) return res.status(404).json({ message: "No such User" });
+        // Fetch transactions, budgets, and notifications for the user
+        const transactions = await TransactionModel.find({ user_id: req.user.id });
+        const budgets = await BudgetModel.find({ user_id: req.user.id });
+        const notifications = await NotificationModel.find({ user_id: req.user.id });
+        // Return user data along with transactions, budgets, and notifications
+        const userJson = user.toJSON ? user.toJSON() : user;
+        userJson.transactions = transactions;
+        userJson.budgets = budgets;
+        userJson.notifications = notifications;
+        return res.json(userJson);
+    }
+    catch (err) {
         return res.status(500).json({ message: "Error when getting User.", error: err });
     }
 }
@@ -101,6 +125,11 @@ async function remove(req, res) {
         if (!user) return res.status(404).json({ message: "No such User" });
         if (req.user.id !== id) return res.status(403).json({ message: "You are not authorized to delete this user" });
 
+        // Delete all transactions, budgets, and notifications associated with the user
+        await TransactionModel.deleteMany({ user_id: id });
+        await BudgetModel.deleteMany({ user_id: id });
+        await NotificationModel.deleteMany({ user_id: id });
+        // Delete the user
         await UserModel.deleteOne({ _id: id });
         return res.status(204).json();
     } catch (err) {
@@ -128,7 +157,9 @@ async function login(req, res) {
 
         // generate JWT token
         const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET || "default_jwt_secret", { expiresIn: "1h" });
-
+        
+        res.setHeader("X-AuthToken", token);
+        res.setHeader("Authorization", `Bearer ${token}`);
         res.json({ token });
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -175,10 +206,12 @@ async function register(req, res) {
         // Generate JWT token
         const token = jwt.sign({ id: savedUser._id, email: savedUser.email }, process.env.JWT_SECRET || "default_jwt_secret", { expiresIn: "1h" });
 
+        res.setHeader("X-AuthToken", token);
+        res.setHeader("Authorization", `Bearer ${token}`);
         res.status(201).json({ token });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 }
 
-module.exports = { list, show, show_with_all, update, remove, login, register };
+module.exports = { list, show, show_with_all, me, update, remove, login, register };
