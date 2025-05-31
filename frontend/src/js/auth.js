@@ -10,7 +10,7 @@ export default function initAuth() {
     errorEl.textContent = msg;
   }
 
-  form.addEventListener('submit', async e => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     errorEl.textContent = '';
 
@@ -25,7 +25,6 @@ export default function initAuth() {
     try {
       const { token, user } = await login(email, password);
 
-
       localStorage.setItem('token', token);
       localStorage.setItem('currentUser', email);
 
@@ -34,4 +33,13 @@ export default function initAuth() {
       showError(err.message);
     }
   });
+
+  const registerBtn = document.getElementById('register');
+  if (registerBtn) {
+    console.log('Register button found, adding listener');
+    registerBtn.addEventListener('click', () => {
+      console.log('Register button clicked, redirecting to register page');
+      window.location.href = '/register';
+    });
+  }
 }

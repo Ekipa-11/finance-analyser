@@ -504,7 +504,7 @@ export default function initBudget() {
     });
   }
 
-  // ─── 9) “Download Report” button ───
+  // ─── 16) “Download Report” button ───
   const downloadBtn = document.getElementById('download-report-btn');
   if (downloadBtn) {
     downloadBtn.addEventListener('click', async () => {
@@ -512,7 +512,6 @@ export default function initBudget() {
         await downloadReport();
       } catch (err) {
         console.error('[budget.js] Failed to download report:', err);
-        alert('Could not download the report. Please try again.');
       }
     });
   }
@@ -525,7 +524,6 @@ export default function initBudget() {
         await exportTransactions();
       } catch (err) {
         console.error('[budget.js] Failed to export transactions:', err);
-        alert('Could not export transactions. Please try again.');
       }
     });
   }

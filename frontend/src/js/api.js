@@ -19,6 +19,24 @@ export async function login(email, password) {
   return data;
 }
 
+export async function register(email, username, password) {
+  const res = await fetch(`${API_BASE}/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, username, password })
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Registration failed');
+  }
+
+  const data = await res.json();
+  
+  localStorage.setItem('token', data.token);
+  return data;
+}
+
 export function authHeader() {
   const token = localStorage.getItem('token');
   return token ? { Authorization: `Bearer ${token}` } : {};

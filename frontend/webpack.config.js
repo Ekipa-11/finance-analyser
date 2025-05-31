@@ -10,10 +10,12 @@ if (process.env.API_BASE_URL === undefined) {
 }
 
 if (1 == 2) {
-  plugins.push(new GenerateSW({
-    clientsClaim: true,
-    skipWaiting: true
-  }));
+  plugins.push(
+    new GenerateSW({
+      clientsClaim: true,
+      skipWaiting: true,
+    })
+  );
 }
 
 module.exports = {
@@ -21,7 +23,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.[contenthash].js',
-    clean: true
+    clean: true,
   },
   module: {
     rules: [
@@ -29,7 +31,7 @@ module.exports = {
       {
         test: /manifest\.json$/,
         type: 'asset/resource',
-        generator: { filename: '[name][ext]' }
+        generator: { filename: '[name][ext]' },
       },
       {
         test: /\.(png|jpe?g|svg|jpg)$/,
@@ -45,21 +47,26 @@ module.exports = {
               return 'screenshots/[name][ext]';
             }
             return '[name][ext]';
-          }
-        }
-      }
-    ]
+          },
+        },
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/html/login.html',
       filename: 'login.html',
-      inject: 'body'
+      inject: 'body',
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/html/register.html',
+      filename: 'register.html',
+      inject: 'body',
     }),
     new HtmlWebpackPlugin({
       template: './src/html/budget.html',
       filename: 'budget.html',
-      inject: 'body'
+      inject: 'body',
     }),
     new GenerateSW({
       clientsClaim: true,
@@ -68,27 +75,27 @@ module.exports = {
         {
           urlPattern: /\/api\/transactions/,
           handler: 'NetworkFirst',
-          options: { cacheName: 'transactions-cache', networkTimeoutSeconds: 3 }
+          options: { cacheName: 'transactions-cache', networkTimeoutSeconds: 3 },
         },
         {
           urlPattern: /\/api\/transactions/,
           handler: 'NetworkOnly',
-          options: { backgroundSync: { name: 'transactions-queue', options: { maxRetentionTime: 24 * 60 } } }
+          options: { backgroundSync: { name: 'transactions-queue', options: { maxRetentionTime: 24 * 60 } } },
         },
         {
           urlPattern: /\/api\/budgets/,
           handler: 'NetworkFirst',
-          options: { cacheName: 'budgets-cache', networkTimeoutSeconds: 3 }
+          options: { cacheName: 'budgets-cache', networkTimeoutSeconds: 3 },
         },
         {
           urlPattern: /\/api\/budgets/,
           handler: 'NetworkOnly',
-          options: { backgroundSync: { name: 'budgets-queue', options: { maxRetentionTime: 24 * 60 } } }
+          options: { backgroundSync: { name: 'budgets-queue', options: { maxRetentionTime: 24 * 60 } } },
         },
         // …any other static‐asset caching you want…
-      ]
+      ],
     }),
-    new DotenvWebpackPlugin({ systemvars: true })
+    new DotenvWebpackPlugin({ systemvars: true }),
   ],
 
   devServer: {
@@ -97,8 +104,9 @@ module.exports = {
       index: '/login.html',
       rewrites: [
         { from: /^\/login/, to: '/login.html' },
-        { from: /^\/budget/, to: '/budget.html' }
-      ]
+        { from: /^\/budget/, to: '/budget.html' },
+        { from: /^\/register/, to: '/register.html' },
+      ],
     },
     proxy: {
       '/api': {
@@ -108,6 +116,6 @@ module.exports = {
       },
     },
     port: process.env.PORT || 4000,
-    open: true
-  }
+    open: true,
+  },
 };
