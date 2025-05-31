@@ -41,11 +41,84 @@ export default function initBudget() {
   // Instantiate the Bootstrap modal (requires Bootstrap JS)
   const editModal = new Modal(editModalEl);
 
-  /**
-   * Render transactions into #entries-list, adding Edit/Delete buttons.
-   * Uses e.id for both data-id attributes.
-   */
+  // ─── 5) Local app state for entries ───
+  let allEntries = [];
+  let pendingOps = JSON.parse(localStorage.getItem('pendingOps') || '[]');
+
+  function saveQueue() {
+    localStorage.setItem('pendingOps', JSON.stringify(pendingOps));
+  }
+  function queueOfflineOp(op) {
+    pendingOps.push(op);
+    saveQueue();
+    console.log('[budget.js] Offline op queued:', op);
+  }
+  function saveLocalEntries() {
+    localStorage.setItem('allEntries', JSON.stringify(allEntries));
+  }
+  function loadLocalEntries() {
+    try {
+      const local = localStorage.getItem('allEntries');
+      return local ? JSON.parse(local) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  // ─── 6) Online/Offline UI state ───
+  const budgetError = document.getElementById('budget-error');
+  function showOfflineMsg() {
+    budgetError.textContent = 'You are offline. Changes will sync automatically when back online.';
+  }
+  function clearStatusMsg() {
+    budgetError.textContent = '';
+  }
+  if (!navigator.onLine) showOfflineMsg();
+
+  window.addEventListener('offline', showOfflineMsg);
+
+  window.addEventListener('online', async () => {
+    budgetError.textContent = 'You are back online. Syncing offline changes...';
+    await syncPendingOps();
+    clearStatusMsg();
+  });
+
+  // ─── 7) Sync offline queue when online ───
+  async function syncPendingOps() {
+    if (!pendingOps.length) return;
+    budgetError.textContent = 'Syncing offline changes...';
+    for (const op of pendingOps) {
+      try {
+        if (op.type === 'add')      await addEntry(op.payload);
+        else if (op.type === 'update') await updateEntry(op.id, op.payload);
+        else if (op.type === 'delete') await deleteEntry(op.id);
+      } catch (err) {
+        console.error('[budget.js] Error replaying pending op', op, err);
+        budgetError.textContent = 'Some offline changes could not be synced. Please retry.';
+        return;
+      }
+    }
+    pendingOps = [];
+    saveQueue();
+    // Refresh entries from server
+    try {
+      allEntries = await getEntries();
+      renderEntries(allEntries);
+      saveLocalEntries();
+    } catch (err) {
+      console.error('[budget.js] Could not refresh entries after sync:', err);
+      budgetError.textContent = 'Could not refresh entries after syncing.';
+    }
+    budgetError.textContent = '';
+  }
+  if (navigator.onLine && pendingOps.length) {
+    syncPendingOps();
+  }
+
+  // ─── 8) Transactions list rendering ───
   function renderEntries(entries) {
+    allEntries = entries;
+    saveLocalEntries();
     listEl.innerHTML = '';
     if (!entries.length) {
       listEl.innerHTML = '<li class="list-group-item">No entries yet</li>';
@@ -86,13 +159,23 @@ export default function initBudget() {
         if (!id) return;
         if (!confirm('Are you sure you want to delete this transaction?')) return;
         console.log(id);
-        
+
         try {
+          if (!navigator.onLine) throw new Error('offline');
           await deleteEntry(id);
-          getEntries().then(renderEntries);
+          allEntries = allEntries.filter(x => (x.id + '') !== (id + ''));
+          renderEntries(allEntries);
         } catch (err) {
-          console.error('[budget.js] Failed to delete entry:', err);
-          alert(err.message || 'Error deleting transaction');
+          if (err.message === 'offline') {
+            queueOfflineOp({ type: 'delete', id });
+            // Optimistically update UI:
+            allEntries = allEntries.filter(x => (x.id + '') !== (id + ''));
+            renderEntries(allEntries);
+            alert('Deleted offline. Will sync when online.');
+          } else {
+            console.error('[budget.js] Failed to delete entry:', err);
+            alert(err.message || 'Error deleting transaction');
+          }
         }
       });
     });
@@ -103,9 +186,9 @@ export default function initBudget() {
         const id = event.currentTarget.getAttribute('data-id');
         if (!id) return;
         console.log(id);
-        
+
         // Find the entry by e.id:
-        const entry = entries.find((x) => (x.id + '') === (id + ''));
+        const entry = allEntries.find((x) => (x.id + '') === (id + ''));
         if (!entry) {
           console.error('[budget.js] Entry not found for editing, id:', id);
           return;
@@ -126,16 +209,26 @@ export default function initBudget() {
     });
   }
 
-  // Initial fetch & render
-  getEntries()
-    .then(renderEntries)
-    .catch((err) => {
-      console.error('[budget.js] Failed to load entries:', err);
-      listEl.innerHTML =
-        '<li class="list-group-item text-danger">Failed to load entries</li>';
-    });
+  // ─── 9) Initial fetch & render ───
+  (async () => {
+    if (navigator.onLine) {
+      try {
+        allEntries = await getEntries();
+        renderEntries(allEntries);
+      } catch (err) {
+        console.error('[budget.js] Failed to load entries:', err);
+        budgetError.textContent = 'Failed to load entries from server.';
+        // Try to use cached
+        allEntries = loadLocalEntries();
+        renderEntries(allEntries);
+      }
+    } else {
+      allEntries = loadLocalEntries();
+      renderEntries(allEntries);
+    }
+  })();
 
-  // “Add Transaction” form listener
+  // ─── 10) “Add Transaction” form listener ───
   txForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     txError.textContent = '';
@@ -149,17 +242,37 @@ export default function initBudget() {
     };
 
     try {
+      if (!navigator.onLine) throw new Error('offline');
       await addEntry(entry);
+      allEntries.push(entry);
       txForm.reset();
-      getEntries().then(renderEntries);
+      // Refetch latest from server for canonical state
+      getEntries()
+        .then(entries => {
+          allEntries = entries;
+          renderEntries(allEntries);
+        })
+        .catch(err => {
+          console.error('[budget.js] Failed to refresh after add:', err);
+        });
     } catch (err) {
-      console.error('[budget.js] Failed to add entry:', err);
-      txError.textContent = err.message || 'Failed to add transaction';
+      if (err.message === 'offline') {
+        queueOfflineOp({ type: 'add', payload: entry });
+        // Optimistically update local entries
+        const tempEntry = { ...entry, id: `temp-${Date.now()}` };
+        allEntries.push(tempEntry);
+        renderEntries(allEntries);
+        txForm.reset();
+        txError.textContent = 'Added offline. Will sync when online.';
+      } else {
+        console.error('[budget.js] Failed to add entry:', err);
+        txError.textContent = err.message || 'Failed to add transaction';
+      }
     }
   });
 
-  // ─── 4.5) “Edit Transaction” modal form listener ───
-  document.getElementById('edit-transaction-form').addEventListener('submit', async (e) => {
+  // ─── 11) “Edit Transaction” modal form listener ───
+  editTxForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     editTxError.textContent = '';
 
@@ -173,23 +286,42 @@ export default function initBudget() {
     };
 
     try {
+      if (!navigator.onLine) throw new Error('offline');
       await updateEntry(id, updatedEntry);
+      // Update local
+      allEntries = allEntries.map(x => (x.id + '') === (id + '') ? { ...x, ...updatedEntry } : x);
       Modal.getInstance(editModalEl).hide();
-      getEntries().then(renderEntries);
+      // Refetch latest from server for canonical state
+      getEntries()
+        .then(entries => {
+          allEntries = entries;
+          renderEntries(allEntries);
+        })
+        .catch(err => {
+          console.error('[budget.js] Failed to refresh after edit:', err);
+        });
     } catch (err) {
-      console.error('[budget.js] Failed to update entry:', err);
-      editTxError.textContent = err.message || 'Failed to save changes';
+      if (err.message === 'offline') {
+        queueOfflineOp({ type: 'update', id, payload: updatedEntry });
+        Modal.getInstance(editModalEl).hide();
+        // Optimistic UI update:
+        allEntries = allEntries.map(x => (x.id + '') === (id + '') ? { ...x, ...updatedEntry } : x);
+        renderEntries(allEntries);
+        editTxError.textContent = 'Updated offline. Will sync when online.';
+      } else {
+        console.error('[budget.js] Failed to update entry:', err);
+        editTxError.textContent = err.message || 'Failed to save changes';
+      }
     }
   });
 
-  // ─── 4) Budgets: variables & helper functions ───
+  // ─── 12) Budgets: variables & helper functions ───
   let allBudgets = [];
 
   // Grab these once; if any is missing, log and bail
   const selectEl = document.getElementById('budget-select');
   const detailsContainer = document.getElementById('budget-details');
   const budgetForm = document.getElementById('budget-form');
-  const budgetError = document.getElementById('budget-error');
 
   if (!selectEl || !detailsContainer || !budgetForm || !budgetError) {
     console.error(
@@ -283,7 +415,7 @@ export default function initBudget() {
     return res.json();
   }
 
-  // ─── 5) On page load: fetch all budgets and populate dropdown ───
+  // ─── 13) On page load: fetch all budgets and populate dropdown ───
   fetchBudgets()
     .then((budgets) => {
       console.log('[budget.js] Loaded budgets:', budgets);
@@ -312,7 +444,7 @@ export default function initBudget() {
       console.error('[budget.js] Could not load budgets:', err);
     });
 
-  // ─── 6) Handle “Add Budget” form submission ───
+  // ─── 14) Handle “Add Budget” form submission ───
   budgetForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     budgetError.textContent = '';
@@ -325,7 +457,7 @@ export default function initBudget() {
     };
 
     try {
-      console.log('[budget.js] Submitting new budget:', newBudget);
+      if (!navigator.onLine) throw new Error('offline');
       const response = await fetch(
         `${process.env.API_BASE_URL || '/api'}/budgets`,
         {
@@ -339,28 +471,25 @@ export default function initBudget() {
       );
       if (!response.ok) {
         const errPayload = await response.json();
-        console.error(
-          '[budget.js] POST /api/budgets failed with payload:',
-          errPayload
-        );
         throw new Error(errPayload.message || 'Failed to add budget');
       }
 
       const created = await response.json();
-      console.log('[budget.js] Created new budget:', created);
-
       allBudgets.push(created);
       fillBudgetDropdown(allBudgets);
       budgetForm.reset();
     } catch (err) {
-      console.error('[budget.js] Failed to add budget:', err);
-      budgetError.textContent = err.message;
+      if (err.message === 'offline') {
+        budgetError.textContent = 'Offline budget add queueing is not yet implemented.';
+        // You can implement offline queueing for budgets here if desired.
+      } else {
+        budgetError.textContent = err.message;
+      }
     }
   });
 
-  // ─── 8) “Refresh Budgets” button ───
+  // ─── 15) “Refresh Budgets” button ───
   const refreshBtn = document.getElementById('refresh-budgets-btn');
-
   if (refreshBtn) {
     refreshBtn.addEventListener('click', async () => {
       try {
@@ -369,7 +498,6 @@ export default function initBudget() {
         fillBudgetDropdown(allBudgets);
         showBudgetDetails(null);
       } catch (err) {
-        console.error('[budget.js] Failed to refresh budgets:', err);
         budgetError.textContent = err.message || 'Failed to refresh budgets';
       }
     });

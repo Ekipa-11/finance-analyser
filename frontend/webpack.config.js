@@ -55,9 +55,36 @@ module.exports = {
       filename: 'budget.html',
       inject: 'body'
     }),
-    new GenerateSW({ clientsClaim: true, skipWaiting: true }),
+    new GenerateSW({
+      clientsClaim: true,
+      skipWaiting: true,
+      runtimeCaching: [
+        {
+          urlPattern: /\/api\/transactions/,
+          handler: 'NetworkFirst',
+          options: { cacheName: 'transactions-cache', networkTimeoutSeconds: 3 }
+        },
+        {
+          urlPattern: /\/api\/transactions/,
+          handler: 'NetworkOnly',
+          options: { backgroundSync: { name: 'transactions-queue', options: { maxRetentionTime: 24 * 60 } } }
+        },
+        {
+          urlPattern: /\/api\/budgets/,
+          handler: 'NetworkFirst',
+          options: { cacheName: 'budgets-cache', networkTimeoutSeconds: 3 }
+        },
+        {
+          urlPattern: /\/api\/budgets/,
+          handler: 'NetworkOnly',
+          options: { backgroundSync: { name: 'budgets-queue', options: { maxRetentionTime: 24 * 60 } } }
+        },
+        // …any other static‐asset caching you want…
+      ]
+    }),
     new DotenvWebpackPlugin({ systemvars: true })
   ],
+
   devServer: {
     static: './dist',
     historyApiFallback: {
@@ -69,7 +96,7 @@ module.exports = {
     },
     proxy: {
       '/api': {
-        target: process.env.API_BASE_URL,  
+        target: process.env.API_BASE_URL,
         changeOrigin: true,
         secure: false,
       },
