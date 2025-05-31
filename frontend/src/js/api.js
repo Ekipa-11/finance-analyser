@@ -20,7 +20,7 @@ export async function login(email, password) {
 /**
  * Helper for auth header
  */
-function authHeader() {
+export function authHeader() {
   const token = localStorage.getItem('token');
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
@@ -48,3 +48,4 @@ export async function addEntry(entry) {
   if (!res.ok) throw new Error('Failed to add entry');
   return res.json();
 }
+

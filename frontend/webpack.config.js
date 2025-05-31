@@ -74,7 +74,7 @@ module.exports = {
         secure: false,
       },
     },
-    port: 8080,
+    port: 4000,
     open: true
   }
 };
