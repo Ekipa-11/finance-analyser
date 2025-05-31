@@ -153,6 +153,14 @@ export default function initBudget() {
           <span><strong>Actual Expenses Expenses:</strong></span>
           <span>${budget.actualExpenses.toFixed(2)}</span>
         </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span><strong>Income Variance:</strong></span>
+          <span>${budget.incomeVariance.toFixed(2)}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span><strong>Expenses Performance:</strong></span>
+          <span>${budget.expensesPerformance.toFixed(2)}</span>
+        </li>
       </ul>
     `;
   }
