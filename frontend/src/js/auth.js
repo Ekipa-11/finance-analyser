@@ -2,7 +2,7 @@
 import { login } from './api.js';
 
 export default function initAuth() {
-  const form    = document.getElementById('login-form');
+  const form = document.getElementById('login-form');
   const errorEl = document.getElementById('login-error');
   if (!form) return;
 

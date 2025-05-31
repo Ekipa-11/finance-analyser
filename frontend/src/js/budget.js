@@ -1,5 +1,6 @@
 // src/js/budget.js
-import { getEntries, addEntry, authHeader } from './api.js';
+import { getEntries, addEntry, authHeader, updateEntry, deleteEntry } from './api.js';
+import { Modal } from 'bootstrap';
 
 export default function initBudget() {
   // ─── 1) Auth guard ───
@@ -19,37 +20,113 @@ export default function initBudget() {
     });
   }
 
-  // ─── 3) Transactions: fetch & render ───
+  // ─── 3) Transactions: cache elements ───
   const listEl = document.getElementById('entries-list');
   const txForm = document.getElementById('entry-form');
   const txError = document.createElement('p');
   txError.className = 'text-danger mt-2';
   txForm.appendChild(txError);
 
+  // ─── 4) Cache “Edit Transaction” modal elements ───
+  const editModalEl = document.getElementById('editTransactionModal');
+  const editTxForm = document.getElementById('edit-transaction-form');
+  const editTxError = document.getElementById('edit-tx-error');
+  const editIdInput = document.getElementById('edit-tx-id');
+  const editTypeInput = document.getElementById('edit-tx-type');
+  const editAmountInput = document.getElementById('edit-tx-amount');
+  const editCategoryInput = document.getElementById('edit-tx-category');
+  const editDateInput = document.getElementById('edit-tx-date');
+  const editDescInput = document.getElementById('edit-tx-description');
+
+  // Instantiate the Bootstrap modal (requires Bootstrap JS)
+  const editModal = new Modal(editModalEl);
+
+  /**
+   * Render transactions into #entries-list, adding Edit/Delete buttons.
+   * Uses e.id for both data-id attributes.
+   */
   function renderEntries(entries) {
     listEl.innerHTML = '';
     if (!entries.length) {
       listEl.innerHTML = '<li class="list-group-item">No entries yet</li>';
       return;
     }
+
     entries.forEach((e) => {
       const li = document.createElement('li');
       li.className =
         'list-group-item d-flex justify-content-between align-items-center';
+
       const displayDate = new Date(e.date).toLocaleDateString();
       li.innerHTML = `
         <div>
           <strong>${e.category}</strong>
-          <span class="badge bg-${e.type === 'income' ? 'success' : 'danger'
-        } ms-2">${e.type}</span>
+          <span class="badge bg-${e.type === 'income' ? 'success' : 'danger'} ms-2">
+            ${e.type}
+          </span>
           <div class="text-muted small">${displayDate}</div>
         </div>
-        <span>${e.amount.toFixed(2)}</span>
+        <div class="d-flex align-items-center">
+          <span class="me-3">${e.amount.toFixed(2)}</span>
+          <button type="button" class="btn btn-sm btn-outline-primary edit-btn me-2" data-id="${e.id}">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button type="button" class="btn btn-sm btn-outline-danger delete-btn" data-id="${e.id}">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
       `;
       listEl.append(li);
     });
+
+    // ─── Attach "Delete" listeners ───
+    document.querySelectorAll('.delete-btn').forEach((btn) => {
+      btn.addEventListener('click', async (event) => {
+        const id = event.currentTarget.getAttribute('data-id');
+        if (!id) return;
+        if (!confirm('Are you sure you want to delete this transaction?')) return;
+        console.log(id);
+        
+        try {
+          await deleteEntry(id);
+          getEntries().then(renderEntries);
+        } catch (err) {
+          console.error('[budget.js] Failed to delete entry:', err);
+          alert(err.message || 'Error deleting transaction');
+        }
+      });
+    });
+
+    // ─── Attach "Edit" listeners ───
+    document.querySelectorAll('.edit-btn').forEach((btn) => {
+      btn.addEventListener('click', (event) => {
+        const id = event.currentTarget.getAttribute('data-id');
+        if (!id) return;
+        console.log(id);
+        
+        // Find the entry by e.id:
+        const entry = entries.find((x) => (x.id + '') === (id + ''));
+        if (!entry) {
+          console.error('[budget.js] Entry not found for editing, id:', id);
+          return;
+        }
+
+        // Pre-fill the modal’s fields
+        editIdInput.value = entry.id;
+        editTypeInput.value = entry.type;
+        editAmountInput.value = entry.amount;
+        editCategoryInput.value = entry.category;
+        editDateInput.value = entry.date.split('T')[0] || entry.date;
+        editDescInput.value = entry.description || '';
+        editTxError.textContent = '';
+
+        // Show the modal
+        editModal.show();
+      });
+    });
   }
 
+  // Initial fetch & render
   getEntries()
     .then(renderEntries)
     .catch((err) => {
@@ -58,15 +135,16 @@ export default function initBudget() {
         '<li class="list-group-item text-danger">Failed to load entries</li>';
     });
 
+  // “Add Transaction” form listener
   txForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     txError.textContent = '';
 
     const entry = {
-      type: txForm.type.value,
-      amount: parseFloat(txForm.amount.value),
-      category: txForm.category.value.trim(),
-      date: txForm.date.value,
+      type:        txForm.type.value,
+      amount:      parseFloat(txForm.amount.value),
+      category:    txForm.category.value.trim(),
+      date:        txForm.date.value,
       description: txForm.description.value.trim(),
     };
 
@@ -77,6 +155,30 @@ export default function initBudget() {
     } catch (err) {
       console.error('[budget.js] Failed to add entry:', err);
       txError.textContent = err.message || 'Failed to add transaction';
+    }
+  });
+
+  // ─── 4.5) “Edit Transaction” modal form listener ───
+  document.getElementById('edit-transaction-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    editTxError.textContent = '';
+
+    const id = document.getElementById('edit-tx-id').value;
+    const updatedEntry = {
+      type:        document.getElementById('edit-tx-type').value,
+      amount:      parseFloat(document.getElementById('edit-tx-amount').value),
+      category:    document.getElementById('edit-tx-category').value.trim(),
+      date:        document.getElementById('edit-tx-date').value,
+      description: document.getElementById('edit-tx-description').value.trim(),
+    };
+
+    try {
+      await updateEntry(id, updatedEntry);
+      Modal.getInstance(editModalEl).hide();
+      getEntries().then(renderEntries);
+    } catch (err) {
+      console.error('[budget.js] Failed to update entry:', err);
+      editTxError.textContent = err.message || 'Failed to save changes';
     }
   });
 
@@ -109,7 +211,7 @@ export default function initBudget() {
   function fillBudgetDropdown(budgets) {
     selectEl.innerHTML = '<option value="">– Choose a Budget –</option>';
     budgets.forEach((b) => {
-      const idStr = b.id + '';               // <-- use b.id, not b._id
+      const idStr = b.id + '';
       const monthStr = b.month.toString().padStart(2, '0');
       const label = `${monthStr}/${b.year}`;
       const opt = document.createElement('option');
@@ -134,8 +236,7 @@ export default function initBudget() {
       <ul class="list-group">
         <li class="list-group-item d-flex justify-content-between">
           <span><strong>Month/Year:</strong></span>
-          <span>${budget.month.toString().padStart(2, '0')}/${budget.year
-      }</span>
+          <span>${budget.month.toString().padStart(2, '0')}/${budget.year}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between">
           <span><strong>Planned Income:</strong></span>
@@ -150,7 +251,7 @@ export default function initBudget() {
           <span>${budget.actualIncome.toFixed(2)}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between">
-          <span><strong>Actual Expenses Expenses:</strong></span>
+          <span><strong>Actual Expenses:</strong></span>
           <span>${budget.actualExpenses.toFixed(2)}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between">
@@ -199,7 +300,7 @@ export default function initBudget() {
           return;
         }
 
-        // Find by string‐coerced id (b.id), not b._id:
+        // Find by string‐coerced id (b.id)
         const selectedBudget = allBudgets.find(
           (b) => (b.id + '') === (chosenId + '')
         );
@@ -264,9 +365,7 @@ export default function initBudget() {
     refreshBtn.addEventListener('click', async () => {
       try {
         const budgets = await fetchBudgets();
-
         allBudgets = budgets;
-
         fillBudgetDropdown(allBudgets);
         showBudgetDetails(null);
       } catch (err) {

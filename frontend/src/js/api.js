@@ -49,3 +49,36 @@ export async function addEntry(entry) {
   return res.json();
 }
 
+
+/**
+ * DELETE /api/transactions/:id
+ */
+export async function deleteEntry(id) {
+  const res = await fetch(`${API_BASE}/transactions/${id}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json', ...authHeader() },
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Failed to delete entry');
+  }
+  // Return nothing on success
+  return;
+}
+
+/**
+ * PUT /api/transactions/:id
+ */
+export async function updateEntry(id, entry) {
+  const res = await fetch(`${API_BASE}/transactions/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...authHeader() },
+    body: JSON.stringify(entry),
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Failed to update entry');
+  }
+  return res.json();
+}
+
