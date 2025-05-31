@@ -1,5 +1,6 @@
 // src/js/budget.js
 import { getEntries, addEntry, authHeader, updateEntry, deleteEntry } from './api.js';
+import { downloadReport, exportTransactions } from './download-files.js';
 import { Modal } from 'bootstrap';
 
 export default function initBudget() {
@@ -499,6 +500,32 @@ export default function initBudget() {
         showBudgetDetails(null);
       } catch (err) {
         budgetError.textContent = err.message || 'Failed to refresh budgets';
+      }
+    });
+  }
+
+  // ─── 9) “Download Report” button ───
+  const downloadBtn = document.getElementById('download-report-btn');
+  if (downloadBtn) {
+    downloadBtn.addEventListener('click', async () => {
+      try {
+        await downloadReport();
+      } catch (err) {
+        console.error('[budget.js] Failed to download report:', err);
+        alert('Could not download the report. Please try again.');
+      }
+    });
+  }
+
+  // ─── 10) "Export" transactions button ───
+  const exportBtn = document.getElementById('export-transactions-btn');
+  if (exportBtn) {
+    exportBtn.addEventListener('click', async () => {
+      try {
+        await exportTransactions();
+      } catch (err) {
+        console.error('[budget.js] Failed to export transactions:', err);
+        alert('Could not export transactions. Please try again.');
       }
     });
   }

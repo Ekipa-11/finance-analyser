@@ -52,3 +52,33 @@ Authorization: Bearer {{authToken}}
   "description": "Monthly salary payment",
   "type": "income"
 }
+
+### create income 2
+POST http://localhost:3000/api/transactions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "amount": 1000,
+  "category": "tmp1",
+  "description": "Monthly salary payment",
+  "type": "income"
+}
+
+
+
+### GET all transactions
+# @name getAllTransactions
+GET http://localhost:3000/api/transactions
+Content-Type: application/json
+Authorization:  Bearer {{authToken}}
+
+### 
+@transactionId1 = {{getAllTransactions.response.body.0.id}}
+
+### DELETE transaction
+### delete expense 1
+DELETE http://localhost:3000/api/transactions/{{transactionId1}}
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+

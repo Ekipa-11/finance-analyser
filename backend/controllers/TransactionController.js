@@ -113,15 +113,23 @@ async function update(req, res) {
  * TransactionController.remove()
  */
 async function remove(req, res) {
-    const id = req.params.id;
     try {
-        const transaction = await TransactionModel.findById(id);
+        const id = req.params.id;
+        if (!req.user || !req.user.id) return res.status(401).json({ message: "Unauthorized: User ID is missing" });
 
+        const transaction = await TransactionModel.findById(id);
         if (!transaction) return res.status(404).json({ message: "No such Transaction" });
         if (transaction.user_id.toString() !== req.user.id)
             return res.status(403).json({ message: "Forbidden: You can only delete your own transactions" });
 
-        await TransactionModel.findByIdAndRemove(id);
+        const category = await CategoryModel.findOne({ name: transaction.category });
+
+        await TransactionModel.deleteOne({ _id: id });
+
+        if (category) {
+            const transactionsInCategory = await TransactionModel.countDocuments({ category: category.name });
+            if (transactionsInCategory === 0) await CategoryModel.deleteOne({ _id: category._id });
+        }
         return res.status(204).json();
     } catch (err) {
         return res.status(500).json({ message: "Error when deleting the Transaction.", error: err });

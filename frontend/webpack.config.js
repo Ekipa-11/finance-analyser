@@ -2,6 +2,12 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { GenerateSW } = require('workbox-webpack-plugin');
 const DotenvWebpackPlugin = require('dotenv-webpack');
+require('dotenv').config();
+
+if (process.env.API_BASE_URL === undefined) {
+  console.error('\x1b[31m%s\x1b[0m', 'API_BASE_URL environment variable is not set.\x1b[0m');
+  process.exit(1);
+}
 
 if (1 == 2) {
   plugins.push(new GenerateSW({
@@ -101,7 +107,7 @@ module.exports = {
         secure: false,
       },
     },
-    port: 4000,
+    port: process.env.PORT || 4000,
     open: true
   }
 };

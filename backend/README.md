@@ -81,6 +81,7 @@ Check [Environment Variables](#environment-variables) section above.
         - if no `type` is provided, it defaults to "expense".
     - PUT /api/transactions/:id - Updates an existing transaction.
     - DELETE /api/transactions/:id - Deletes a transaction.
+        - if category isn't part of any transaction, it is deleted as well.
 
 4. Budget Management:
     - GET /api/budgets - Returns a list of all user budgets.

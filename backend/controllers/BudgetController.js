@@ -53,7 +53,6 @@ async function list(req, res) {
             return b.month - a.month; // Sort by month descending
         });
         // Return the budgets as JSON
-        console.log("Budgets[0]: ", BudgetsJSON[0]);
         return res.json(BudgetsJSON);
     } catch (err) {
         return res.status(500).json({ message: "Error when getting Budget.", error: err });
@@ -105,7 +104,6 @@ async function show(req, res) {
 
 async function create(req, res) {
     try {
-        console.log(req.body);
 
         // Check if every required field is present (all are numbers)
         if (!req.user || !req.user.id) return res.status(401).json({ message: "Unauthorized: User ID is missing" });
