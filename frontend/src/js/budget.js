@@ -1,5 +1,6 @@
 // src/js/budget.js
 import { getEntries, addEntry, authHeader } from './api.js';
+import { downloadReport } from './download-files.js';
 
 export default function initBudget() {
   // ─── 1) Auth guard ───
@@ -264,6 +265,20 @@ export default function initBudget() {
       } catch (err) {
         console.error('[budget.js] Failed to refresh budgets:', err);
         budgetError.textContent = err.message || 'Failed to refresh budgets';
+      }
+    });
+  }
+
+  // ─── 9) “Download Report” button ───
+  const downloadBtn = document.getElementById('download-report-btn');
+  if (downloadBtn) {
+    downloadBtn.addEventListener('click', async () => {
+      try {
+        console.log('[budget.js] Download Report button clicked');
+        await downloadReport();
+      } catch (err) {
+        console.error('[budget.js] Failed to download report:', err);
+        alert('Could not download the report. Please try again.');
       }
     });
   }
