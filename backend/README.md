@@ -77,13 +77,18 @@ Check [Environment Variables](#environment-variables) section above.
     - GET /api/transactions - Returns a list of all user transactions.
     - GET /api/transactions/:id - Returns a specific transaction by ID.
     - POST /api/transactions - Creates a new transaction.
+        - if no `date` is provided, the current date is used.
+        - if no `type` is provided, it defaults to "expense".
     - PUT /api/transactions/:id - Updates an existing transaction.
     - DELETE /api/transactions/:id - Deletes a transaction.
 
 4. Budget Management:
     - GET /api/budgets - Returns a list of all user budgets.
+        - also returns calculated `actualIncome`, `actualExpenses`, `incomeVariance`, `expensesPerformance` for each budget.
     - GET /api/budgets/:id - Returns a specific budget by ID.
+        - also returns calculated `actualIncome`, `actualExpenses`, `incomeVariance`, `expensesPerformance` for each budget.
     - POST /api/budgets - Creates a new budget.
+        - if no `month` and `year` are provided, the current month and year are used.
     - PUT /api/budgets/:id - Updates an existing budget.
     - DELETE /api/budgets/:id - Deletes a budget.
 
@@ -104,6 +109,7 @@ Check [Environment Variables](#environment-variables) section above.
 7. Exports:
     - GET /api/export - exports all transactions to a CSV file.
     - GET /api/report - generates a report of the user's finances as a PDF file.
+
 
 ## Data Structures
 
