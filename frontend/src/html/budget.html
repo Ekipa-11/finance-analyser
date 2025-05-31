@@ -67,7 +67,12 @@
       <div class="col-md-6">
         <div class="card shadow-sm h-100">
           <div class="card-body">
-            <h5 class="card-title">Transactions</h5>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h5 class="card-title mb-0">Transactions</h5>
+              <button id="export-transactions-btn" class="btn btn-outline-secondary btn-sm" style="width: 100px;">
+                Export
+              </button>
+            </div>
 
             <!-- Instead of using flex-grow, just cap the UL at a fixed height -->
             <ul id="entries-list" class="list-group overflow-auto"

@@ -1,6 +1,6 @@
 // src/js/budget.js
 import { getEntries, addEntry, authHeader } from './api.js';
-import { downloadReport } from './download-files.js';
+import { downloadReport, exportTransactions } from './download-files.js';
 
 export default function initBudget() {
   // ─── 1) Auth guard ───
@@ -274,11 +274,23 @@ export default function initBudget() {
   if (downloadBtn) {
     downloadBtn.addEventListener('click', async () => {
       try {
-        console.log('[budget.js] Download Report button clicked');
         await downloadReport();
       } catch (err) {
         console.error('[budget.js] Failed to download report:', err);
         alert('Could not download the report. Please try again.');
+      }
+    });
+  }
+
+  // ─── 10) "Export" transactions button ───
+  const exportBtn = document.getElementById('export-transactions-btn');
+  if (exportBtn) {
+    exportBtn.addEventListener('click', async () => {
+      try {
+        await exportTransactions();
+      } catch (err) {
+        console.error('[budget.js] Failed to export transactions:', err);
+        alert('Could not export transactions. Please try again.');
       }
     });
   }
