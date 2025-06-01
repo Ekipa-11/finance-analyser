@@ -10,28 +10,41 @@
   "orientation": "portrait",
   "lang": "en",
   "categories": ["finance", "productivity"],
-
   "icons": [
     {
-      "src": "icons/icon_testing.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "src": "icons/logo_1024x1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
     },
     {
-      "src": "icons/icon_testing.png",
-      "sizes": "64x64",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "src": "icons/logo_512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/logo_192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/logo_96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
     }
   ],
-
   "screenshots": [
     {
-      "src": "icons/icon_testing.png",
-      "sizes": "640x360",
+      "src": "icons/screenshot_1.png",
+      "sizes": "1990x1352",
       "type": "image/png",
-      "platform": "wide"
+      "label": "Main Dashboard",
+      "form_factor": "wide"
+    },
+    {
+      "src": "icons/screenshot_2.png",
+      "sizes": "965x1352",
+      "type": "image/png",
+      "label": "Main Dashboard"
     }
   ]
 }

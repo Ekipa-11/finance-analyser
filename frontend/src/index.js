@@ -8,6 +8,13 @@ import './js/pwa.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 
+import './icons/logo_1024x1024.png';
+import './icons/logo_512x512.png';
+import './icons/logo_192x192.png';
+import './icons/logo_96x96.png';
+import './icons/screenshot_1.png';
+import './icons/screenshot_2.png';
+
 // normalize page name
 const raw = window.location.pathname.split('/').pop();
 const page = !raw || raw === '' ? 'login.html' : raw;
