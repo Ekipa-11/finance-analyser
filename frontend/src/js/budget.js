@@ -543,4 +543,20 @@ export default function initBudget() {
   }
 
 });
+
+
 }
+
+document.getElementById('test-notification').addEventListener('click', async () => {
+  try {
+    const response = await fetch('http://localhost:3010/test-notification');
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+    const data = await response.json();
+    console.log('Test notification response:', data);
+    alert(`Notifications sent: ${data.successful} successful, ${data.failed} failed.`);
+  } catch (error) {
+    console.error('Error calling test notification API:', error);
+    alert('Failed to send test notifications.');
+  }
+});
