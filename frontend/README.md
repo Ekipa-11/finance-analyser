@@ -49,3 +49,9 @@ PORT=4000 # set in docker-compose.yaml
 ```
 
 If the `PORT` variable is changed in `docker-compose.yaml`, make sure to change it in the `.env` file as well.'
+
+## Hotkeys
+
+- "." + Left alt = Page reload (Both sites)
+- "," + Left alt = Export csv (Budgets site)
+- Enter = Go to Graphs site

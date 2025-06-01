@@ -28,9 +28,3 @@ or with this one-liner:
 ```bash
 docker compose down && docker compose up -d --build && docker compose logs frontend backend -f
 ```
-
-## Hotkeys
-
-- "." + Left alt = Page reload (Both sites)
-- "," + Left alt = Export csv (Budgets site)
-- Enter = Go to Graphs site
