@@ -68,11 +68,11 @@ module.exports = {
       filename: 'budget.html',
       inject: 'body',
     }),
-      new HtmlWebpackPlugin({
-    template: './src/html/graphs.html',
-    filename: 'graphs.html',
-    inject: 'body',
-  }),
+    new HtmlWebpackPlugin({
+      template: './src/html/graphs.html',
+      filename: 'graphs.html',
+      inject: 'body',
+    }),
     new GenerateSW({
       clientsClaim: true,
       skipWaiting: true,
@@ -123,5 +123,10 @@ module.exports = {
     },
     port: process.env.PORT || 4000,
     open: true,
+  },
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000,
   },
 };
