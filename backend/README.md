@@ -8,6 +8,20 @@ This is the backend of finance-analyser
 Make sure environment variables are set.  
 For more information, see the [Environment Variables](#environment-variables) section below.
 
+### Vapid Keys
+
+Before running the server, you need to generate VAPID keys for web push notifications.
+You can generate them using the following command:
+```bash
+npx web-push generate-vapid-keys
+```
+
+This will output a public and private key.  
+You need to set these keys in your [`.env`](#environment-variables) file.  
+
+[Docker](#docker-compose) already sets them in the `docker-compose.yaml` file, but those are only placeholders for development purposes.  
+Make sure to replace them with your own keys in production.
+
 ### Docker compose
 
 Some environment variables are set in `docker-compose.yaml` and `docker-compose.dev.yaml`.
@@ -37,7 +51,9 @@ Make sure to set the following environment variables in a `.env` file or in your
 MONGO_URI=mongodb://mongo:27017/fin-analy-db # set in docker-compose.yaml
 PORT=3000 # set in docker-compose.yaml
 API_PREFIX=/api # set in docker-compose.yaml
-JWT_SECRET=default_jwt_secret
+JWT_SECRET=default_jwt_secret # set in docker-compose.yaml but should be replaced with your own secret
+VAPID_PUBLIC_KEY=your_public_vapid_key # set in docker-compose.yaml but should be replaced with your own key
+VAPID_PRIVATE_KEY=your_private_vapid_key # set in docker-compose.yaml but should be replaced with your own key
 ```
 
 ## Development
@@ -103,12 +119,7 @@ Check [Environment Variables](#environment-variables) section above.
     - DELETE /api/categories/:id - Deletes a category.
 
 6. Notifications:
-    - GET /api/notifications - Returns a list of all user notifications.
-    - POST /api/notifications - Creates a new notification.
-    - PUT /api/notifications/:id - Updates an existing notification
-    - PUT /api/notifications/:id/read- Marks a notification as read.
-    - PUT /api/notifications/:id/unread - Marks a notification as unread.
-    - DELETE /api/notifications/:id - Deletes a notification.
+    - POST /api/subscribe - Subscribes a user to notifications.
 
 7. Exports:
     - GET /api/export - exports all transactions to a CSV file.
@@ -142,17 +153,16 @@ Check [Environment Variables](#environment-variables) section above.
 | created_at | Date     | Creation timestamp     |
 | updated_at | Date     | Last update timestamp  |
 
-### Notification
+### Subscription
 
-| Field      | Type                 | Description                  |
-|------------|----------------------|------------------------------|
-| id         | ObjectId             | Unique identifier            |
-| user_id    | ObjectId (ref: User) | Reference to the user        |
-| message    | String               | Notification message         |
-| type       | String               | Notification type            |
-| read       | Boolean              | Read status                  |
-| created_at | Date                 | Creation timestamp           |
-| updated_at | Date                 | Last update timestamp        |
+| Field      | Type     | Description            |
+|------------|----------|------------------------|
+| id         | ObjectId | Unique identifier      |
+| endpoint   | String   | Subscription endpoint  |
+| keys       | Object   | Subscription keys      |
+
+- p256dh     | String   | Public key             |
+- auth       | String   | Authentication key     |
 
 ### Budget
 

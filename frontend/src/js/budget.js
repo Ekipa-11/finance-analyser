@@ -90,7 +90,7 @@ export default function initBudget() {
     budgetError.textContent = 'Syncing offline changes...';
     for (const op of pendingOps) {
       try {
-        if (op.type === 'add')      await addEntry(op.payload);
+        if (op.type === 'add') await addEntry(op.payload);
         else if (op.type === 'update') await updateEntry(op.id, op.payload);
         else if (op.type === 'delete') await deleteEntry(op.id);
       } catch (err) {
@@ -128,8 +128,7 @@ export default function initBudget() {
 
     entries.forEach((e) => {
       const li = document.createElement('li');
-      li.className =
-        'list-group-item d-flex justify-content-between align-items-center';
+      li.className = 'list-group-item d-flex justify-content-between align-items-center';
 
       const displayDate = new Date(e.date).toLocaleDateString();
       li.innerHTML = `
@@ -164,13 +163,13 @@ export default function initBudget() {
         try {
           if (!navigator.onLine) throw new Error('offline');
           await deleteEntry(id);
-          allEntries = allEntries.filter(x => (x.id + '') !== (id + ''));
+          allEntries = allEntries.filter((x) => x.id + '' !== id + '');
           renderEntries(allEntries);
         } catch (err) {
           if (err.message === 'offline') {
             queueOfflineOp({ type: 'delete', id });
             // Optimistically update UI:
-            allEntries = allEntries.filter(x => (x.id + '') !== (id + ''));
+            allEntries = allEntries.filter((x) => x.id + '' !== id + '');
             renderEntries(allEntries);
             alert('Deleted offline. Will sync when online.');
           } else {
@@ -189,7 +188,7 @@ export default function initBudget() {
         console.log(id);
 
         // Find the entry by e.id:
-        const entry = allEntries.find((x) => (x.id + '') === (id + ''));
+        const entry = allEntries.find((x) => x.id + '' === id + '');
         if (!entry) {
           console.error('[budget.js] Entry not found for editing, id:', id);
           return;
@@ -235,10 +234,10 @@ export default function initBudget() {
     txError.textContent = '';
 
     const entry = {
-      type:        txForm.type.value,
-      amount:      parseFloat(txForm.amount.value),
-      category:    txForm.category.value.trim(),
-      date:        txForm.date.value,
+      type: txForm.type.value,
+      amount: parseFloat(txForm.amount.value),
+      category: txForm.category.value.trim(),
+      date: txForm.date.value,
       description: txForm.description.value.trim(),
     };
 
@@ -249,11 +248,11 @@ export default function initBudget() {
       txForm.reset();
       // Refetch latest from server for canonical state
       getEntries()
-        .then(entries => {
+        .then((entries) => {
           allEntries = entries;
           renderEntries(allEntries);
         })
-        .catch(err => {
+        .catch((err) => {
           console.error('[budget.js] Failed to refresh after add:', err);
         });
     } catch (err) {
@@ -279,10 +278,10 @@ export default function initBudget() {
 
     const id = document.getElementById('edit-tx-id').value;
     const updatedEntry = {
-      type:        document.getElementById('edit-tx-type').value,
-      amount:      parseFloat(document.getElementById('edit-tx-amount').value),
-      category:    document.getElementById('edit-tx-category').value.trim(),
-      date:        document.getElementById('edit-tx-date').value,
+      type: document.getElementById('edit-tx-type').value,
+      amount: parseFloat(document.getElementById('edit-tx-amount').value),
+      category: document.getElementById('edit-tx-category').value.trim(),
+      date: document.getElementById('edit-tx-date').value,
       description: document.getElementById('edit-tx-description').value.trim(),
     };
 
@@ -290,15 +289,15 @@ export default function initBudget() {
       if (!navigator.onLine) throw new Error('offline');
       await updateEntry(id, updatedEntry);
       // Update local
-      allEntries = allEntries.map(x => (x.id + '') === (id + '') ? { ...x, ...updatedEntry } : x);
+      allEntries = allEntries.map((x) => (x.id + '' === id + '' ? { ...x, ...updatedEntry } : x));
       Modal.getInstance(editModalEl).hide();
       // Refetch latest from server for canonical state
       getEntries()
-        .then(entries => {
+        .then((entries) => {
           allEntries = entries;
           renderEntries(allEntries);
         })
-        .catch(err => {
+        .catch((err) => {
           console.error('[budget.js] Failed to refresh after edit:', err);
         });
     } catch (err) {
@@ -306,7 +305,7 @@ export default function initBudget() {
         queueOfflineOp({ type: 'update', id, payload: updatedEntry });
         Modal.getInstance(editModalEl).hide();
         // Optimistic UI update:
-        allEntries = allEntries.map(x => (x.id + '') === (id + '') ? { ...x, ...updatedEntry } : x);
+        allEntries = allEntries.map((x) => (x.id + '' === id + '' ? { ...x, ...updatedEntry } : x));
         renderEntries(allEntries);
         editTxError.textContent = 'Updated offline. Will sync when online.';
       } else {
@@ -325,15 +324,12 @@ export default function initBudget() {
   const budgetForm = document.getElementById('budget-form');
 
   if (!selectEl || !detailsContainer || !budgetForm || !budgetError) {
-    console.error(
-      '[budget.js] Required elements missing:',
-      {
-        selectElExists: !!selectEl,
-        detailsContainerExists: !!detailsContainer,
-        budgetFormExists: !!budgetForm,
-        budgetErrorExists: !!budgetError,
-      }
-    );
+    console.error('[budget.js] Required elements missing:', {
+      selectElExists: !!selectEl,
+      detailsContainerExists: !!detailsContainer,
+      budgetFormExists: !!budgetForm,
+      budgetErrorExists: !!budgetError,
+    });
     return;
   }
 
@@ -407,9 +403,7 @@ export default function initBudget() {
       headers: { 'Content-Type': 'application/json', ...authHeader() },
     });
     if (!res.ok) {
-      console.error(
-        `[budget.js] fetchBudgets(): server responded with ${res.status}`
-      );
+      console.error(`[budget.js] fetchBudgets(): server responded with ${res.status}`);
       throw new Error('Failed to load budgets');
     }
     return res.json();
@@ -433,9 +427,7 @@ export default function initBudget() {
         }
 
         // Find by string‐coerced id (b.id)
-        const selectedBudget = allBudgets.find(
-          (b) => (b.id + '') === (chosenId + '')
-        );
+        const selectedBudget = allBudgets.find((b) => b.id + '' === chosenId + '');
         console.log('[budget.js] find(...) returned =', selectedBudget);
         showBudgetDetails(selectedBudget);
       });
@@ -458,17 +450,14 @@ export default function initBudget() {
 
     try {
       if (!navigator.onLine) throw new Error('offline');
-      const response = await fetch(
-        `${process.env.API_BASE_URL || '/api'}/budgets`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...authHeader(),
-          },
-          body: JSON.stringify(newBudget),
-        }
-      );
+      const response = await fetch(`${process.env.API_BASE_URL || '/api'}/budgets`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...authHeader(),
+        },
+        body: JSON.stringify(newBudget),
+      });
       if (!response.ok) {
         const errPayload = await response.json();
         throw new Error(errPayload.message || 'Failed to add budget');
@@ -527,82 +516,78 @@ export default function initBudget() {
     });
   }
 
-
-  window.addEventListener("keydown", function(event) {
-  // Prevent Backspace from navigating back in browser history accidentally
-  if (event.key === "Enter") {
-    event.preventDefault();
-    window.location.href = "graphs.html";
-  } else if ((event.key === ".") && event.altKey) {
-    event.preventDefault();
-    location.reload();
-  }
-  else if ((event.key === ",") && event.altKey) {
-    exportTransactions();
-  }
-
-});
-
-
-
-const publicVapidKey = 'BPI8pB6zGaqG54CzT3NYldwS8DrsxZMFxGcIdFtCogpwsV45Cfl4Est_Yd9LvwwrbhiEYZm2d4dlnOVzbwimxpw';
-
-function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const rawData = atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-}
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', async () => {
-    try {
-      const registration = await navigator.serviceWorker.register('/service-worker.js');
-      console.log('Service Worker registered:', registration.scope);
-
-      const subscribeBtn = document.getElementById('subscribeBtn');
-      if (!subscribeBtn) {
-        console.error('Subscribe button not found');
-        return;
-      }
-
-      subscribeBtn.addEventListener('click', async () => {
-        try {
-          // Check for existing subscription and unsubscribe if keys differ (optional)
-          const existingSubscription = await registration.pushManager.getSubscription();
-          if (existingSubscription) {
-            // If needed, unsubscribe here to avoid key conflicts
-            await existingSubscription.unsubscribe();
-            console.log('Unsubscribed existing subscription');
-          }
-
-          const subscription = await registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
-          });
-
-          await fetch('http://localhost:4010/subscribe', {
-            method: 'POST',
-            body: JSON.stringify(subscription),
-            headers: { 'Content-Type': 'application/json' }
-          });
-
-          console.log('Subscribed and sent to server');
-        } catch (err) {
-          console.error('Failed to subscribe:', err);
-        }
-      });
-
-    } catch (err) {
-      console.error('Service Worker registration failed:', err);
+  window.addEventListener('keydown', function (event) {
+    // Prevent Backspace from navigating back in browser history accidentally
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      window.location.href = 'graphs.html';
+    } else if (event.key === '.' && event.altKey) {
+      event.preventDefault();
+      location.reload();
+    } else if (event.key === ',' && event.altKey) {
+      exportTransactions();
     }
   });
-} else {
-  console.warn('Service workers or Push messaging not supported');
-}
 
+  function urlBase64ToUint8Array(base64String) {
+    try {
+      const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+      const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+      const rawData = atob(base64);
+      const outputArray = new Uint8Array(rawData.length);
+      for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+      return outputArray;
+    } catch (err) {
+      console.error('Failed to convert base64 to Uint8Array:', err);
+      return new Uint8Array();
+    }
+  }
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', async () => {
+      try {
+        const registration = await navigator.serviceWorker.register('/service-worker.js');
+        console.log('Service Worker registered:', registration.scope);
+
+        const subscribeBtn = document.getElementById('subscribeBtn');
+        if (!subscribeBtn) {
+          console.error('Subscribe button not found');
+          return;
+        }
+
+        subscribeBtn.addEventListener('click', async () => {
+          try {
+            // Check for existing subscription and unsubscribe if keys differ (optional)
+            const existingSubscription = await registration.pushManager.getSubscription();
+            if (existingSubscription) {
+              // If needed, unsubscribe here to avoid key conflicts
+              await existingSubscription.unsubscribe();
+              console.log('Unsubscribed existing subscription');
+            }
+
+            const subscription = await registration.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: urlBase64ToUint8Array(process.env.VAPID_PUBLIC_KEY),
+            });
+
+            await fetch(process.env.API_BASE_URL + '/subscribe', {
+              method: 'POST',
+              body: JSON.stringify(subscription),
+              headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
+            });
+
+            console.log('Subscribed and sent to server');
+          } catch (err) {
+            console.error('Failed to subscribe:', err);
+          }
+        });
+      } catch (err) {
+        console.error('Service Worker registration failed:', err);
+      }
+    });
+  } else {
+    console.warn('Service workers or Push messaging not supported');
+  }
 }

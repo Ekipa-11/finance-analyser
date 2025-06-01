@@ -10,6 +10,11 @@ if (process.env.API_BASE_URL === undefined) {
   process.exit(1);
 }
 
+if (process.env.VAPID_PUBLIC_KEY === undefined){
+  console.error('\x1b[31m%s\x1b[0m', 'VAPID_PUBLIC_KEY environment variable is not set.\x1b[0m');
+  process.exit(1);
+}
+
 if (1 == 2) {
   plugins.push(
     new GenerateSW({

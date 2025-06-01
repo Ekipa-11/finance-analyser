@@ -10,5 +10,4 @@ services:
     environment:
       - PORT=80
       - API_BASE_URL=http://localhost:3000/api
-    volumes:
-      - .:/app
+      - VAPID_PUBLIC_KEY=BPb7eEVIzi8XkXa5n9sDDj49s7TrgwU9CxpUPtN8gM5xt0pg2dksbHCO6eFT2I9BwzkC78062DduWdkiGO6Z9nE

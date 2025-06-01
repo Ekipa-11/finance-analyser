@@ -9,6 +9,8 @@ services:
       - MONGO_URI=mongodb://mongo:27017/fin-analy-db
       - PORT=3000
       - API_PREFIX=/api
+      - VAPID_PUBLIC_KEY=BPb7eEVIzi8XkXa5n9sDDj49s7TrgwU9CxpUPtN8gM5xt0pg2dksbHCO6eFT2I9BwzkC78062DduWdkiGO6Z9nE
+      - VAPID_PRIVATE_KEY=pvMtaNJ0L_Dh2k-0bATnm42sxA5Yh9GYRfaG8p_8Yu8
     networks:
       - fin-analy-network
 

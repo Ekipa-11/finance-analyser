@@ -21,7 +21,7 @@ router.get("/:id", UserController.show);
 /*
  * GET
  * Get user with all related data
- * (transactions, budgets, notifications)
+ * (transactions, budgets)
  */
 router.get("/:id/all", UserController.show_with_all);
 

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const UserController = require("../controllers/UserController.js");
 const exportController = require("../controllers/exportController.js");
+const subscriptionController = require("../controllers/SubscriptionController.js");
 
 /*
  * POST
@@ -28,5 +29,11 @@ router.get("/report", exportController.getUserReport);
  */
 
 router.get("/export", exportController.getTransactionsCsv);
+
+/*
+ * POST
+  Subscribe to push notifications
+ */
+router.post("/subscribe", subscriptionController.subscribeToNotifications);
 
 module.exports = router;

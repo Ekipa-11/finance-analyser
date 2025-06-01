@@ -18,6 +18,18 @@ services:
     extends:
       file: backend/docker-compose.yaml
       service: mongo
+
+  mongo-express:
+    image: mongo-express
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_PORT=27017
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongo
+    networks:
+      - fin-analy-network
       
 networks:
   fin-analy-network:

@@ -1,7 +1,6 @@
 const UserModel = require("../models/UserModel.js");
 const TransactionModel = require("../models/TransactionModel.js");
 const BudgetModel = require("../models/BudgetModel.js");
-const NotificationModel = require("../models/NotificationModel.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -56,15 +55,12 @@ async function show_with_all(req, res) {
         if (!user) return res.status(404).json({ message: "No such User" });
         // Check if the user is trying to access their own profile
         if (req.user.id !== id) return res.status(403).json({ message: "You are not authorized to access this user" });
-        // Fetch transactions, budgets, and notifications for the user
         const transactions = await TransactionModel.find({ user_id: id });
         const budgets = await BudgetModel.find({ user_id: id });
-        const notifications = await NotificationModel.find({ user_id: id });
-        // Return user data along with transactions, budgets, and notifications
+        // Return user data along with transactions, budgets
         const userJson = user.toJSON ? user.toJSON() : user;
         userJson.transactions = transactions;
         userJson.budgets = budgets;
-        userJson.notifications = notifications;
         return res.json(userJson);
     } catch (err) {
         return res.status(500).json({ message: "Error when getting User.", error: err });
@@ -78,15 +74,13 @@ async function me(req, res) {
         // Fetch the authenticated user
         const user = await UserModel.findOne({ _id: req.user.id });
         if (!user) return res.status(404).json({ message: "No such User" });
-        // Fetch transactions, budgets, and notifications for the user
+        // Fetch transactions, budgets, for the user
         const transactions = await TransactionModel.find({ user_id: req.user.id });
         const budgets = await BudgetModel.find({ user_id: req.user.id });
-        const notifications = await NotificationModel.find({ user_id: req.user.id });
-        // Return user data along with transactions, budgets, and notifications
+        // Return user data along with transactions, budgets
         const userJson = user.toJSON ? user.toJSON() : user;
         userJson.transactions = transactions;
         userJson.budgets = budgets;
-        userJson.notifications = notifications;
         return res.json(userJson);
     }
     catch (err) {
@@ -125,10 +119,9 @@ async function remove(req, res) {
         if (!user) return res.status(404).json({ message: "No such User" });
         if (req.user.id !== id) return res.status(403).json({ message: "You are not authorized to delete this user" });
 
-        // Delete all transactions, budgets, and notifications associated with the user
+        // Delete all transactions, budgets, and associated with the user
         await TransactionModel.deleteMany({ user_id: id });
         await BudgetModel.deleteMany({ user_id: id });
-        await NotificationModel.deleteMany({ user_id: id });
         // Delete the user
         await UserModel.deleteOne({ _id: id });
         return res.status(204).json();
