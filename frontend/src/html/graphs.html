@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Finance Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js" defer></script>
   <style>
     /* Reset and base */
     body {
@@ -107,6 +108,8 @@
       color: #6a1b9a;
     }
 
+</style>
+
   </style>
 </head>
 <body>
@@ -117,9 +120,7 @@
   <h1 class="h4 m-0">Budget Dashboard</h1>
 </a>
     <div class="d-flex gap-2 align-items-center">
-      <button id="download-report-btn" class="btn btn-outline-primary btn-sm" style="width: 150px;">
-        Download Report
-      </button>
+      <button id="voiceToggleBtn" class="btn btn-outline-secondary btn-sm" style="width: 256px;">🎙️ Start Voice Control</button>
       <button id="logout-btn" class="btn btn-outline-danger btn-sm me-3" style="width: 128px;">
         Logout
       </button>
@@ -160,7 +161,17 @@
     </div>
   </div>
 </main>
+<button id="commandsToggleBtn" class="btn btn-outline-secondary btn-sm" style="width:300px;">🧾 Show Voice Commands</button>
 
+<div id="voiceCommandsList" style="display: none;">
+  <h3>🎤 Voice Commands</h3>
+  <ul>
+    <li><strong>“Show totals”</strong> – Displays current income, expenses, and balance</li>
+    <li><strong>“Refresh data”</strong> – Reloads the dashboard</li>
+    <li><strong>“Log out”</strong> – Logs you out of the app</li>
+    <li><strong>“Go to home”</strong> – Navigates to home page</li>
+  </ul>
+</div>
 <script>
   // Your Chart.js and other JS goes here
 </script>

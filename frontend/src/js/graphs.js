@@ -44,6 +44,15 @@ export default function initRegister() {
     return { transactions, budgets };
   }
 
+    const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('currentUser');
+      window.location.href = 'login.html';
+    });
+  }
+
   function groupByDate(transactions) {
     const grouped = {};
     transactions.forEach(tx => {
@@ -206,5 +215,64 @@ export default function initRegister() {
 
     // Budgets using totals from calculateTotals to match donut chart
     renderBudgets(budgets, totals);
+
+ 
+    let voiceActive = false;
+  const voiceBtn = document.getElementById('voiceToggleBtn');
+
+  function updateVoiceButton() {
+    voiceBtn.textContent = voiceActive ? '🛑 Stop Voice Control' : '🎙️ Start Voice Control';
+  }
+const commandsToggleBtn = document.getElementById('commandsToggleBtn');
+const voiceCommandsList = document.getElementById('voiceCommandsList');
+
+if (commandsToggleBtn && voiceCommandsList) {
+  commandsToggleBtn.addEventListener('click', () => {
+    const isVisible = voiceCommandsList.style.display === 'block';
+    voiceCommandsList.style.display = isVisible ? 'none' : 'block';
+    commandsToggleBtn.textContent = isVisible ? '🧾 Show Voice Commands' : '❌ Hide Voice Commands';
+  });
+}
+  if (window.annyang && voiceBtn) {
+    const commands = {
+      'show totals': () => {
+        alert(`Income: €${totals.income.toFixed(2)}, Expenses: €${totals.expenses.toFixed(2)}, Balance: €${totals.balance.toFixed(2)}`);
+      },
+      'refresh data': () => {
+        window.location.reload();
+      },
+      'log out': () => {
+        localStorage.clear();
+        window.location.href = 'login.html';
+      },
+      'go to *page': (page) => {
+        const map = {
+          'home': 'budget.html'
+        };
+        const route = map[page.toLowerCase()];
+        if (route) window.location.href = route;
+        else alert(`Unknown page: ${page}`);
+      }
+    };
+
+    annyang.addCommands(commands);
+
+    voiceBtn.addEventListener('click', () => {
+      if (!voiceActive) {
+        annyang.start({ autoRestart: false, continuous: true });
+        console.log('[voice] Voice control started');
+      } else {
+        annyang.abort();
+        console.log('[voice] Voice control stopped');
+      }
+      voiceActive = !voiceActive;
+      updateVoiceButton();
+    });
+
+    updateVoiceButton();
+  } else {
+    console.warn('[voice] Voice control not available');
+    if (voiceBtn) voiceBtn.disabled = true;
+  }
   });
 }
