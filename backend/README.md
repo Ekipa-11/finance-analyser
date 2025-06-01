@@ -1,6 +1,8 @@
 # Finance analyser server
 This is the backend of finance-analyser
- 
+
+![Logo](../frontend/src/icons/logo_96x96.png)
+
 ## Running
 
 Make sure environment variables are set.  

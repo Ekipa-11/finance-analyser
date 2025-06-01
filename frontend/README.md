@@ -22,7 +22,8 @@ npm run start
 ```
 
 ### Docker compose
-Some [environment variables](#environment-variables) are set in `docker-compose.yaml` and `docker-compose.dev.yaml`.
+Some [environment variables](#environment-variables) are set in `docker-compose.yaml` and `docker-compose.dev.yaml`.  
+If the `PORT` variable is changed in `docker-compose.yaml`, make sure to change it in the `.env` file as well.'
 
 ```bash
 docker compose up -d --build
@@ -46,3 +47,5 @@ Make sure to set the following environment variables in a `.env` file or in your
 API_BASE_URL=http://localhost:3000/api # set in docker-compose.yaml
 PORT=4000 # set in docker-compose.yaml
 ```
+
+If the `PORT` variable is changed in `docker-compose.yaml`, make sure to change it in the `.env` file as well.'
