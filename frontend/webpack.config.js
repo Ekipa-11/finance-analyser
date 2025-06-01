@@ -34,7 +34,7 @@ module.exports = {
         generator: { filename: '[name][ext]' },
       },
       {
-        test: /\.(png|jpe?g|svg|jpg)$/,
+        test: /\.(png|jpe?g|svg|jpg|ico)$/,
         type: 'asset/resource',
         generator: {
           filename: (pathData) => {

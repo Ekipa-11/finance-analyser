@@ -14,6 +14,7 @@ import './icons/logo_192x192.png';
 import './icons/logo_96x96.png';
 import './icons/screenshot_1.png';
 import './icons/screenshot_2.png';
+import './icons/favicon.ico';
 
 // normalize page name
 const raw = window.location.pathname.split('/').pop();
