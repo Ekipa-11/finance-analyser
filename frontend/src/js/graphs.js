@@ -279,7 +279,7 @@ if (commandsToggleBtn && voiceCommandsList) {
 
 window.addEventListener("keydown", function(event) {
   // Prevent Backspace from navigating back in browser history accidentally
- if (event.key === "r" || event.key === "R") {
+ if ((event.key === ".") && event.altKey) {
     event.preventDefault();
     location.reload();
   }

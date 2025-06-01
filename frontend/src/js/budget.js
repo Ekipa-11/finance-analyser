@@ -534,11 +534,11 @@ export default function initBudget() {
   if (event.key === "Enter") {
     event.preventDefault();
     window.location.href = "graphs.html";
-  } else if (event.key === "r" || event.key === "R") {
+  } else if ((event.key === ".") && event.altKey) {
     event.preventDefault();
     location.reload();
   }
-  else if (event.key === "e" || event.key === "E") {
+  else if ((event.key === ",") && event.altKey) {
     exportTransactions();
   }
 
