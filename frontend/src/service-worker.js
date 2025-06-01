@@ -24,17 +24,7 @@ registerRoute(
   }),
 );
 
-// Push Notification
-self.addEventListener('push', (event) => {
-  console.log('[Service Worker] Push received');
-  const data = event.data?.json() || {};
-  const title = data.title || 'Default Title';
-  const options = {
-    body: data.body || 'Default body',
-    icon: '/icon.png',
-  };
-  event.waitUntil(self.registration.showNotification(title, options));
-});
+
 
 self.addEventListener('push', function(event) {
   console.log('[Service Worker] Push Received');
