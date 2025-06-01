@@ -527,4 +527,20 @@ export default function initBudget() {
       }
     });
   }
+
+
+  window.addEventListener("keydown", function(event) {
+  // Prevent Backspace from navigating back in browser history accidentally
+  if (event.key === "Enter") {
+    event.preventDefault();
+    window.location.href = "graphs.html";
+  } else if (event.key === "r" || event.key === "R") {
+    event.preventDefault();
+    location.reload();
+  }
+  else if (event.key === "e" || event.key === "E") {
+    exportTransactions();
+  }
+
+});
 }

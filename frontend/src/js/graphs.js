@@ -274,5 +274,17 @@ if (commandsToggleBtn && voiceCommandsList) {
     console.warn('[voice] Voice control not available');
     if (voiceBtn) voiceBtn.disabled = true;
   }
+
+
+
+window.addEventListener("keydown", function(event) {
+  // Prevent Backspace from navigating back in browser history accidentally
+ if (event.key === "r" || event.key === "R") {
+    event.preventDefault();
+    location.reload();
+  }
+
+  
+});
   });
 }
