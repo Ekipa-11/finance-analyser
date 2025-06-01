@@ -531,16 +531,12 @@ export default function initBudget() {
 
   function urlBase64ToUint8Array(base64String) {
     try {
-      const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-      const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-      const rawData = atob(base64);
-      const outputArray = new Uint8Array(rawData.length);
-      for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-      }
-      return outputArray;
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const raw = atob(base64);
+    return Uint8Array.from([...raw].map((char) => char.charCodeAt(0)));
     } catch (err) {
-      console.error('Failed to convert base64 to Uint8Array:', err);
+      console.error('Failed to convert VAPID key:', err);
       return new Uint8Array();
     }
   }
@@ -571,6 +567,8 @@ export default function initBudget() {
               userVisibleOnly: true,
               applicationServerKey: urlBase64ToUint8Array(process.env.VAPID_PUBLIC_KEY),
             });
+
+            console.log('Subscribed to push notifications:', subscription);
 
             await fetch(process.env.API_BASE_URL + '/subscribe', {
               method: 'POST',

@@ -6,7 +6,11 @@ webpush.setVapidDetails("mailto:finance@analyser.si", process.env.VAPID_PUBLIC_K
 async function sendPushNotification(subscription, data) {
     try {
         const payload = JSON.stringify(data);
-        await webpush.sendNotification(subscription.endpoint, payload);
+        console.log("--------------------------------------------------");
+        console.log("--------------------------------------------------");
+        console.log("Sending push notification to:", subscription);
+        console.log("Sending push notification to endpoint:", subscription.endpoint);
+        await webpush.sendNotification(subscription, payload);
         console.log("Push notification sent successfully:", subscription.endpoint);
     } catch (error) {
         try {
