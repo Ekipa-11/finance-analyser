@@ -35,7 +35,7 @@ async function sendReminder() {
     console.log("Sending budget reminder...", subs.length, "subscribers found.");
     subs.forEach((sub) =>
         sendPushNotification(sub, {
-            title: "📈 Budget Reminder",
+            title: "📈 Finances Reminder",
             body: "Don’t forget to log today’s expenses!",
         })
     );
