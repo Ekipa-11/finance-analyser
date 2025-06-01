@@ -46,6 +46,7 @@ export function authHeader() {
  * Fetch all entries (transactions)
  */
 export async function getEntries() {
+
   try {
     const res = await fetch(`${API_BASE}/transactions`, {
       headers: { 'Content-Type': 'application/json', ...authHeader() }

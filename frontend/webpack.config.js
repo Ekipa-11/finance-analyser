@@ -68,6 +68,11 @@ module.exports = {
       filename: 'budget.html',
       inject: 'body',
     }),
+      new HtmlWebpackPlugin({
+    template: './src/html/graphs.html',
+    filename: 'graphs.html',
+    inject: 'body',
+  }),
     new GenerateSW({
       clientsClaim: true,
       skipWaiting: true,
@@ -106,6 +111,7 @@ module.exports = {
         { from: /^\/login/, to: '/login.html' },
         { from: /^\/budget/, to: '/budget.html' },
         { from: /^\/register/, to: '/register.html' },
+        { from: /^\/graphs/, to: '/graphs.html' },
       ],
     },
     proxy: {

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finance Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Reset and base */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding-top: 70px; /* header height */
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    /* Fixed header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 1000;
+    }
+    header h1 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+    header nav a {
+      color: #6a1b9a;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 8px 16px;
+      border: 2px solid #6a1b9a;
+      border-radius: 6px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    header nav a:hover {
+      background-color: #6a1b9a;
+      color: white;
+    }
+
+    /* Grid layout for main content */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    /* Cards */
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: #6a1b9a;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .chart-container {
+      flex-grow: 1;
+      height: 250px;
+    }
+
+    .progress {
+      background: #eee;
+      border-radius: 4px;
+      height: 10px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      background: #8e24aa;
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    /* Summary styling */
+    .summary p {
+      font-size: 1.1rem;
+      margin: 10px 0;
+    }
+    .summary strong {
+      font-size: 1.3rem;
+      color: #6a1b9a;
+    }
+
+  </style>
+</head>
+<body>
+
+<header class="fixed-top bg-white shadow-sm">
+  <div class="container-fluid d-flex justify-content-between align-items-center py-3">
+    <a href="budget.html" style="text-decoration: none; color: inherit;">
+  <h1 class="h4 m-0">Budget Dashboard</h1>
+</a>
+    <div class="d-flex gap-2 align-items-center">
+      <button id="download-report-btn" class="btn btn-outline-primary btn-sm" style="width: 150px;">
+        Download Report
+      </button>
+      <button id="logout-btn" class="btn btn-outline-danger btn-sm me-3" style="width: 128px;">
+        Logout
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="grid">
+    <div class="card summary">
+      <h3>Summary</h3>
+      <p>💰 Balance: <strong id="balance">...</strong></p>
+    </div>
+
+    <div class="card">
+      <h3>This Month</h3>
+      <div class="chart-container"><canvas id="donutChart"></canvas></div>
+    </div>
+
+    <div class="card">
+      <h3>Balance Over Time</h3>
+      <div class="chart-container"><canvas id="lineChart"></canvas></div>
+    </div>
+
+    <div class="card">
+      <h3>Budgets</h3>
+      <div id="budgetsContainer"></div>
+    </div>
+
+    <div class="card">
+      <h3>Last 7 Days</h3>
+      <div class="chart-container"><canvas id="barChart"></canvas></div>
+    </div>
+
+    <div class="card">
+      <h3>Cash Flow (Transactions)</h3>
+      <div class="chart-container"><canvas id="cashFlowChart"></canvas></div>
+    </div>
+  </div>
+</main>
+
+<script>
+  // Your Chart.js and other JS goes here
+</script>
+
+</body>
+</html>

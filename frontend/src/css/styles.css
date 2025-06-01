@@ -7,12 +7,15 @@
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   min-height: 100vh;
 }
 
+/* ONLY center login pages */
+body.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 /* Container */
 .login-container {
   background: #fff;

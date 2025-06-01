@@ -27,7 +27,16 @@ if (page === 'login.html' || page === 'login') {
       mod.default();
     })
     .catch((err) => console.error('[index.js] budget.js failed:', err));
-} else if (page === 'register.html' || page === 'register') {
+} 
+ else if (page === 'graphs.html' || page === 'graphs') {
+  import('./js/graphs.js')
+    .then((mod) => {
+      console.log('[index.js] graphs.js module loaded');
+      mod.default();
+    })
+    .catch((err) => console.error('[index.js] graphs.js failed:', err));
+}
+else if (page === 'register.html' || page === 'register') {
   import('./js/register.js')
     .then((mod) => {
       console.log('[index.js] register.js module loaded');
