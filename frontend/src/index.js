@@ -54,3 +54,4 @@ else if (page === 'register.html' || page === 'register') {
 } else {
   console.warn('[index.js] No script for page:', page);
 }
+

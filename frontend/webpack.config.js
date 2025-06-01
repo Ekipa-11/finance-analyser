@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { GenerateSW } = require('workbox-webpack-plugin');
 const DotenvWebpackPlugin = require('dotenv-webpack');
 require('dotenv').config();
+const { InjectManifest } = require('workbox-webpack-plugin');
 
 if (process.env.API_BASE_URL === undefined) {
   console.error('\x1b[31m%s\x1b[0m', 'API_BASE_URL environment variable is not set.\x1b[0m');
@@ -53,6 +54,12 @@ module.exports = {
     ],
   },
   plugins: [
+    new InjectManifest({
+  swSrc: './src/service-worker.js',   // <-- Your custom service worker file
+  swDest: 'service-worker.js',
+  maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // optional
+}),
+
     new HtmlWebpackPlugin({
       template: './src/html/login.html',
       filename: 'login.html',
@@ -73,33 +80,7 @@ module.exports = {
       filename: 'graphs.html',
       inject: 'body',
     }),
-    new GenerateSW({
-      clientsClaim: true,
-      skipWaiting: true,
-      runtimeCaching: [
-        {
-          urlPattern: /\/api\/transactions/,
-          handler: 'NetworkFirst',
-          options: { cacheName: 'transactions-cache', networkTimeoutSeconds: 3 },
-        },
-        {
-          urlPattern: /\/api\/transactions/,
-          handler: 'NetworkOnly',
-          options: { backgroundSync: { name: 'transactions-queue', options: { maxRetentionTime: 24 * 60 } } },
-        },
-        {
-          urlPattern: /\/api\/budgets/,
-          handler: 'NetworkFirst',
-          options: { cacheName: 'budgets-cache', networkTimeoutSeconds: 3 },
-        },
-        {
-          urlPattern: /\/api\/budgets/,
-          handler: 'NetworkOnly',
-          options: { backgroundSync: { name: 'budgets-queue', options: { maxRetentionTime: 24 * 60 } } },
-        },
-        // …any other static‐asset caching you want…
-      ],
-    }),
+ 
     new DotenvWebpackPlugin({ systemvars: true }),
   ],
 

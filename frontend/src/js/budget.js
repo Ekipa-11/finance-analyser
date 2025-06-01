@@ -354,7 +354,6 @@ export default function initBudget() {
     });
     console.log('[budget.js] Dropdown options populated:', selectEl.innerHTML);
   }
-
   /**
    * Render the given budget’s details, or clear if `budget` is falsy.
    */
@@ -543,4 +542,67 @@ export default function initBudget() {
   }
 
 });
+
+
+
+const publicVapidKey = 'BPI8pB6zGaqG54CzT3NYldwS8DrsxZMFxGcIdFtCogpwsV45Cfl4Est_Yd9LvwwrbhiEYZm2d4dlnOVzbwimxpw';
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', async () => {
+    try {
+      const registration = await navigator.serviceWorker.register('/service-worker.js');
+      console.log('Service Worker registered:', registration.scope);
+
+      const subscribeBtn = document.getElementById('subscribeBtn');
+      if (!subscribeBtn) {
+        console.error('Subscribe button not found');
+        return;
+      }
+
+      subscribeBtn.addEventListener('click', async () => {
+        try {
+          // Check for existing subscription and unsubscribe if keys differ (optional)
+          const existingSubscription = await registration.pushManager.getSubscription();
+          if (existingSubscription) {
+            // If needed, unsubscribe here to avoid key conflicts
+            await existingSubscription.unsubscribe();
+            console.log('Unsubscribed existing subscription');
+          }
+
+          const subscription = await registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
+          });
+
+          await fetch('http://localhost:4010/subscribe', {
+            method: 'POST',
+            body: JSON.stringify(subscription),
+            headers: { 'Content-Type': 'application/json' }
+          });
+
+          console.log('Subscribed and sent to server');
+        } catch (err) {
+          console.error('Failed to subscribe:', err);
+        }
+      });
+
+    } catch (err) {
+      console.error('Service Worker registration failed:', err);
+    }
+  });
+} else {
+  console.warn('Service workers or Push messaging not supported');
+}
+
 }
