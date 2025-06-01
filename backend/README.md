@@ -14,14 +14,19 @@ Some environment variables are set in `docker-compose.yaml` and `docker-compose.
 docker compose up -d
 ```
 
-**development**:
+Check the [recommended way](#development) to run the backend in development mode.
+
+### Node.js
+You can also run the backend without Docker. A MongoDB instance is required to be running separately.
+1. Install dependencies:
 ```bash
-docker compose -f docker-compose.dev.yaml up -d --build
+npm install
 ```
-or my recommended way (a 1 liner):
+2. Start the server:
 ```bash
-docker compose -f docker-compose.dev.yaml down && docker compose -f docker-compose.dev.yaml up --build -d && docker compose logs fin-analy-express -f
+npm start
 ```
+
 
 ## Environment Variables
 
@@ -36,7 +41,7 @@ JWT_SECRET=default_jwt_secret
 ## Development
 
 ### Running docker
-
+ 
 ```bash
 docker compose -f docker-compose.dev.yaml up -d --build
 ```
@@ -45,10 +50,6 @@ or my recommended way (a 1 liner):
 docker compose -f docker-compose.dev.yaml down && docker compose -f docker-compose.dev.yaml up --build -d && docker compose logs fin-analy-express -f --no-log-prefix
 ```
 
-You can use Docker to run the backend with the development configuration.  
-
-This adds mongo-express as a web interface for MongoDB, which is useful for development and debugging.  
-Available at `http://localhost:8080`, with default credentials `admin:pass`
 
 ### HTTP Client
 You can use the [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) extension for VS Code to test the API endpoints.  
